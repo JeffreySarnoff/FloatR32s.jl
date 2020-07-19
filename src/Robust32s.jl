@@ -5,7 +5,7 @@ export Robust32
 import Base: signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, +, -, *, \, /, ^, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign
              
-import Base.Math: acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
+import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
                   csc, cscd, csch, deg2rad, evalpoly, exp, exp10, exp2, expm1,
                   log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
@@ -77,7 +77,7 @@ for F in (:hypot, :clamp)
   end  
 end
 
-for F in (:acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :asec,
+for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :asec,
           :asecd, :asech, :asin, :asind, :asinh, :atan, :atand, :atanh, :cos, :cosc,
           :cosd, :cosh, :cospi, :cot, :cotd, :coth, :csc, :cscd, :csch, :deg2rad,
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
