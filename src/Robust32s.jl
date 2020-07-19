@@ -1,9 +1,10 @@
 module Robust32s
 
-export Robust32
+export Robust32, InfR32, NaNR32
 
 import Base: signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, +, -, *, \, /, ^, hypot, clamp, clamp!,
-             min, max, minmax, frexp, ldexp, abs, copysign, flipsign
+             min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
+             isfinite, issubnormal, isinf, isnan
              
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
@@ -19,6 +20,9 @@ value(x::Robust32) = x.val
 
 Robust32(x::Robust32) = x
 
+const InfR32 = Robust32(Inf)
+const NaNR32 = Robust32(NaN)
+
 #=
   to maintain the package intent correctly
      explicit construction of a Float64 requires the target become a Float32
@@ -28,7 +32,7 @@ Base.Float32(x::Robust32) = Float32(x.val)
 Base.Float16(x::Robust32) = Float16(x.val)
 
 for T in (:Float32, :Float16, :Signed, :Unsigned)
-   @eval Robust32(x::$T) = Roubust32(Float64(X))
+   @eval Robust32(x::$T) = Robust32(Float64(X))
 end   
 
 Base.show(io::IO, x::Robust32) = print(io, Float32(x))
@@ -53,8 +57,19 @@ Base.convert(::Type{Robust32}, x::T) where {T<:Unsigned} = Robust32(x)
 eps(x::Robust32) = eps(Float32(x))
 significand(x::Robust32) = significand(Float32(x))
 exponent(x::Robust32) = exponent(Float32(x))
+iszero(x::Robust32) = iszero(Float32(x))
+isone(x::Robust32) = isone(Float32(x))
+isfinite(x::Robust32) = isfinite(Float32(x))
+issubnormal(x::Robust32) = issubnormal(Float32(x))
+isinf(x::Robust32) = isinf(Float32(x))
+isnan(x::Robust32) = isnan(Float32(x))
 
 signbit(x::Robust32) = signbit(value(x))
+
+zero(::Type{Robust32}) = Robust32(0.0)
+one(::Type{Robust32}) = Robust32(1.0)
+zero(x::Robust32) = zero(Robust32)
+one(x::Robust32) = one(Robust32)
 
 for F in (:-, :abs, :sign, :inv, :sqrt, :cbrt)
   @eval $F(x::Robust32) = Robust32($F(value(x)))
