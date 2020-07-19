@@ -31,7 +31,7 @@ for T in (:Float32, :Float16, :Signed, :Unsigned)
    @eval Robust32(x::$T) = Roubust32(Float64(X))
 end   
 
-Base.show(io::IO, x::Roubust32) = print(io, Float32(x))
+Base.show(io::IO, x::Robust32) = print(io, Float32(x))
 
 Base.promote_rule(::Type{Robust32}, ::Type{Base.IEEEFloat}) = Robust32
 Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Signed} = Robust32
@@ -51,7 +51,7 @@ Base.convert(::Type{Robust32}, x::T) where {T<:Unsigned} = Robust32(x)
     some primitive operations must be taken with respect to Float32
 =#
 eps(x::Robust32) = eps(Float32(x))
-significand(x::Robust32) = significand(Float32(x)))
+significand(x::Robust32) = significand(Float32(x))
 exponent(x::Robust32) = exponent(Float32(x))
 
 signbit(x::Robust32) = signbit(value(x))
@@ -93,7 +93,7 @@ function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
     Robust32(evalpoly(Float64(x), map(value, p)))
 end
 function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
-    Robust32(evalpoly(value(x), p)))
+    Robust32(evalpoly(value(x), p))
 end
 
 end  # Robust32s
