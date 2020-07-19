@@ -80,13 +80,13 @@ end
 for F in (:acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :asec,
           :asecd, :asech, :asin, :asind, :asinh, :atan, :atand, :atanh, :cos, :cosc,
           :cosd, :cosh, :cospi, :cot, :cotd, :coth, :csc, :cscd, :csch, :deg2rad,
-          :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi, :modf,
+          :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
           :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
           :sinpi, :tan, :tand, :tanh)
     @eval $F(x::Robust32) = Robust32($F(value(x)))
 end
 
-for F in (:sincos, :sincosd, :sincospi)
+for F in (:modf, :sincos, :sincosd, :sincospi)
   @eval function $F(x::Robust32)
             s, c = $F(value(x))
             return Robust32(s), Robust32(c)
