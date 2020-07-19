@@ -11,7 +11,7 @@ import Base.Math: acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, as
                   log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
                   sin, sinc, sincos, sincosd, sincospi, sind, sinh, sinpi, tan, tand, tanh
 
-type Robust32
+struct Robust32
     val::Float64
 end
 
