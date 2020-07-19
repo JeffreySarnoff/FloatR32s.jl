@@ -81,9 +81,16 @@ for F in (:acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :
           :asecd, :asech, :asin, :asind, :asinh, :atan, :atand, :atanh, :cos, :cosc,
           :cosd, :cosh, :cospi, :cot, :cotd, :coth, :csc, :cscd, :csch, :deg2rad,
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi, :modf,
-          :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sincos, :sincosd,
-          :sincospi, :sind, :sinh, :sinpi, :tan, :tand, :tanh)
+          :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
+          :sinpi, :tan, :tand, :tanh)
     @eval $F(x::Robust32) = Robust32($F(value(x)))
+end
+
+for F in (:sincos, :sincosd, :sincospi)
+  @eval function $F(x::Robust32)
+            s, c = $F(value(x))
+            return Robust32(s), Robust32(c)
+         end
 end
 
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
