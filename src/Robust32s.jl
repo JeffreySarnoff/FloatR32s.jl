@@ -2,7 +2,8 @@ module Robust32s
 
 export Robust32, InfR32, NaNR32
 
-import Base: signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, +, -, *, \, /, ^, hypot, clamp, clamp!,
+import Base: ==, !=, <, <=, >, >=, isless, isequal,
+             signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, +, -, *, \, /, ^, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
              isfinite, issubnormal, isinf, isnan
              
@@ -75,13 +76,21 @@ for F in (:-, :abs, :sign, :inv, :sqrt, :cbrt)
   @eval $F(x::Robust32) = Robust32($F(value(x)))
 end
 
+for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
+  @eval begin
+    $F(x::Robust32, y::Robust32) = $F(value(x), value(y))
+    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
+    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
+  end  
+end
+
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign)
   @eval begin
     $F(x::Robust32, y::Robust32) = Robust32($F(value(x), value(y)))
     $F(x::Robust32, y::Real) = $F(promote(x,y)...)
     $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
-end    
+end
 
 for F in (:hypot, :clamp)
   @eval begin
