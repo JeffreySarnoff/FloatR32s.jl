@@ -2,8 +2,8 @@ module Robust32s
 
 export Robust32, InfR32, NaNR32
 
-import Base: ==, !=, <, <=, >, >=, isless, isequal,
-             signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, +, -, *, \, /, ^, hypot, clamp, clamp!,
+import Base: ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
+             signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
              isfinite, issubnormal, isinf, isnan
              
