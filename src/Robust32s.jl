@@ -76,6 +76,12 @@ one(::Type{Robust32}) = Robust32(1.0)
 zero(x::Robust32) = zero(Robust32)
 one(x::Robust32) = one(Robust32)
 
+frexp(x::Robust32) = frexp(Float32(x))
+
+for F in (:sign, :exponent, :significand)
+  @eval $F(x::Robust32) = $F(Float32(x))
+end
+
 for F in (:-, :abs, :sign, :inv, :sqrt, :cbrt)
   @eval $F(x::Robust32) = Robust32($F(value(x)))
 end
