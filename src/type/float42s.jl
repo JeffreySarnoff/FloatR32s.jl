@@ -39,4 +39,3 @@ Base.Int8(x::Float42)   = Int8(Float32(x))
 
 Base.show(io::IO, x::Float42) = print(io, Float32(x))
 Base.parse(::Type{Float42}, x::String) = Float42(parse(Float32, x))
-
