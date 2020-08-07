@@ -10,7 +10,19 @@ struct Float42 <: AbstractFloat
     val::Float64
 end
 
+Float42(x::Float42) = x
+
 value(x::Float42) = x.val
+
+Float42(x::Float32) = Float42(Float64(x))
+Base.convert(::Type{Float42}, x::Float32) = Float42(Float64(x))
+Float32(x::Float42) = Float32(value(x))
+Base.convert(::Type{Float32}, x::Float42) = Float32(value(x))
+
+Float42(x::Float64) = Float42(x)
+Base.convert(::Type{Float42}, x::Float64) = Float42(Float64(Float32(x)))
+Float64(x::Float42) = value(x)
+Base.convert(::Type{Float64}, x::Float42) = Float64(Float32(value(x))
 
 Base.BigFloat(x::Float42) = BigFloat(Float32(x))
 Base.Float64(x::Float42)  = Float64(Float32(x))
