@@ -111,7 +111,7 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
     @eval $F(x::Robust32) = Robust32($F(value(x)))
 end
 
-for F in (:modf, :sincos, :sincosd, :sincospi)
+for F in (:modf, :sincos, :sincosd) # , :sincospi)
   @eval function $F(x::Robust32)
             s, c = $F(value(x))
             return Robust32(s), Robust32(c)
