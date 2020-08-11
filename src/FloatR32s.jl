@@ -39,7 +39,7 @@ Rob32(x::Float64) = FloatR32(As64, x)
 
 FloatR32(x::FloatR32) = x # idempotency
 
-Base.show(io::IO, x::FloatR32) = print(io, value32(x))
+Base.show(io::IO, x::FloatR32) = show(io, value32(x))
 Base.string(x::FloatR32) = string(value32(x))
 
 const ComplexR32 = Complex{FloatR32}
