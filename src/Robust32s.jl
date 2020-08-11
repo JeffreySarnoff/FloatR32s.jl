@@ -1,6 +1,6 @@
 module Robust32s
 
-export Robust32
+export Robust32, ComplexR32
 
 import LinearAlgebra
 
@@ -24,6 +24,8 @@ Robust32(x::Robust32) = x # idempotency
 
 Base.show(io::IO, x::Robust32) = print(io, value32(x))
 Base.string(x::Robust32) = string(value32(x))
+
+const ComplexR32 = Complex{Robust32}
 
 #=
   to maintain the package intent correctly
@@ -187,6 +189,10 @@ for F in (:tr, :det)
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(reinterpret(Float64, x))
 end
 
+for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric, :istril, :istriu)
+  @eval LinearAlgebra.$F(x::Matrix{Robust32}) = $F(reinterpret(Float64, x))
+end
+
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
@@ -195,11 +201,27 @@ end
 
 LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(reinterpret(Float64, x)))
 
+LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(reinterpret(Float64,A); kw...))
+LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(reinterpret(Float64,A); kw...))
 LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(reinterpret(Float64,A)))
 LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(reinterpret(Float64,A)))
 
-for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric, :istril, :istriu)
-  @eval LinearAlgebra.$F(x::Matrix{Robust32}) = $F(reinterpret(Float64, x))                              
+function LinearAlgebra.svd(x::Matrix{Robust32})
+    u, s, v = svd(reinterpret(Float64, x))
+    U = reinterpret(Robust32, u)
+    S = reinterpret(Robust32, x)
+    V = adjoint(rewrap(adjoint(v)))
+    return U, S, V
+end
+                                    
+function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
+    u, s, v = svd(reinterpret(Float64, x); kw...)
+    U = reinterpret(Robust32, u)
+    S = reinterpret(Robust32, x)
+    V = adjoint(rewrap(adjoint(v)))
+    return U, S, V
+end
+                                
 end  # Robust32s
 
 #=
