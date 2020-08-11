@@ -24,7 +24,6 @@ value(x::Robust32) = x.val
 
 Robust32(x::Float32) = Robust32(Float64(x))
 
-
 const InfR32 = Robust32(Inf)
 const NaNR32 = Robust32(NaN)
 
