@@ -150,76 +150,41 @@ function Base.evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
     Rob32(evalpoly(value64(x), p))
 end
 
-function Base.Vector{Float64}(x::Vector{Robust32})
-    n = length(x)
-    res = Vector{Float64}(undef, n)
-    for idx in 1:n
-       @inbounds res[idx] = x[idx].val
-    end
-    return res
-end
+function Base.Vector{Float64}(x::Vector{Robust32}) = reinterpret(Float64, x)
+function Base.Vector{Robust32}(x::Vector{Float64}) = reinterpret(Robust32, x)
+function Base.Matrix{Float64}(x::Matrix{Robust32}) = reinterpret(Float64, x)
+function Base.Matrix{Robust32}(x::Matrix{Float64}) = reinterpret(Robust32, x)
+function Base.Array{Float64,N}(x::Array{Robust32,N}) where {N} = reinterpret(Float64, x)
+function Base.Array{Robust32,N}(x::Array{Float64,N}) where {N} = reinterpret(Robust32, x)
 
-Base.Vector{Robust32}(x::Matrix{Float64}) = Rob32.(x)
+for F in (:+, :-, :*, :/, :\)
+  @eval begin
+    $F(x::Vector{Robust32}, y::Vector{Robust32}) = reinterpret(Robust32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
+    $F(x::Vector{Robust32}, y::Vector{Float64})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
+    $F(x::Vector{Float64}, y::Vector{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
+    $F(x::Vector{Robust32}, y::Vector{Float32})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
+    $F(x::Vector{Float32}, y::Vector{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
 
-function Base.Matrix{Float64}(x::Matrix{Robust32})
-    rows, cols = size(x)
-    res = Matrix{Float64}(undef, rows, cols)
-    for r in 1:rows
-        for c in 1:cols
-           @inbounds res[r,c] = x[r,c].val
-        end
-    end
-    return res
-end
-
-Base.Matrix{Robust32}(x::Matrix{Float64}) = Rob32.(x)
-
-function Base.Array{N,Float64}(x::Array{N,Robust32}) where {N}
-    dims = size(x)
-    res = Array{Float64}(undef, dims)
-    for idx in eachindex(x)
-       @inbounds res[idx] = x[idx].val
-    end
-    return res
-end
-
-Base.Array{N,Robust32}(x::Array{N,Float64}) where {N} = Rob32.(x)
-
-function Base.:(*)(a::Array{Robust32,2}, b::Array{Robust32,2})
-    arows, acols = size(a)
-    brows, bcols = size(b)
-    if  acols != brows
-       throw(DimensionMismatch(string("size(a,1) != size(b,2): ",size(a,1), " != ", size(b,2))))
-    end
-
-    result_rows, result_cols = arows, bcols
-    result = reshape(Array{Float64, 1}(undef, result_rows*result_cols), (result_rows, result_cols))
-
-    for bcol = 1:bcols
-       for arow = 1:arows
-           asum = zero(Float64)
-           for acol = 1:acols
-               @inbounds asum = fma(a[arow,acol].val, b[acol,bcol].val, asum)
-           end
-           @inbounds result[arow,bcol] = asum
-       end
-    end
-
-    return Matrix{Robust32}(result)
+    $F(x::Matrix{Robust32}, y::Matrix{Robust32}) = reinterpret(Robust32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
+    $F(x::Matrix{Robust32}, y::Matrix{Float64})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
+    $F(x::Matrix{Float64}, y::Matrix{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
+    $F(x::Matrix{Robust32}, y::Matrix{Float32})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
+    $F(x::Matrix{Float32}, y::Matrix{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
+  end
 end
 
 for F in (:tr, :det)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(Matrix{Float64}(x)))
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(reinterpret(Float64, x))
 end
 
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32.($F(Matrix{Float64}(x)))
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = reinterpret(Robust32, $F(reinterpret(Float64, x)))
 end
 
-LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(Array{N,Float64}(x)))
-
+LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(reinterpret(Float64, x)))
+  
 end  # Robust32s
 
 #=
