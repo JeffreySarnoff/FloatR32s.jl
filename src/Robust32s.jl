@@ -14,7 +14,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
                   # sincospi,
 
-struct Robust32
+struct Robust32 <: AbstractFloat
     val::Float64
 end
 
