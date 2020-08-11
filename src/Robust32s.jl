@@ -186,13 +186,13 @@ end
 Base.Array{N,Robust32}(x::Array{N,Float64}) where {N} = Rob32.(x)
 
 for F in (:tr, :det)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(Matrix{Float64}(x))
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(Matrix{Float64}(x)))
 end
 
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32.($F(Matrix{Float64}(x))
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32.($F(Matrix{Float64}(x)))
 end
 
 LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(Array{N,Float64}(x)))
