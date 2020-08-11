@@ -27,7 +27,7 @@ float6432(x) = Float64(Float32(x))
 for T in (:BigFloat, :Float64, :Float32, :Float16)
   @eval begin
     Base.$T(x::Robust32) = $T(value32(x))
-    Robust32(x::$T) = Rob(float6432(x))
+    Robust32(x::$T) = Rob32(float6432(x))
     Base.convert(::Type{$T}, x::Robust32) = $T(x)
     Base.promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
   end
