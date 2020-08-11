@@ -46,7 +46,7 @@ LinearAlgebra.eigvals!(A::Matrix{FloatR32}) = rewrap(eigvals!(rewrap(A)))
 function LinearAlgebra.svd(x::Matrix{FloatR32})
     u, s, v = svd(rewrap(x))
     U = rewrap(u)
-    S = rewrap(x)
+    S = rewrap(s)
     V = adjoint(rewrap(adjoint(v)))
     return SVD{FloatR32,FloatR32,Matrix{FloatR32}}(U, S, V)
 end
@@ -54,7 +54,7 @@ end
 function LinearAlgebra.svd!(x::Matrix{FloatR32}; kw...)
     u, s, v = svd!(rewrap(x); kw...)
     U = rewrap(u)
-    S = rewrap(x)
+    S = rewrap(s)
     V = adjoint(rewrap(adjoint(v)))
     return SVD{FloatR32,FloatR32,Matrix{FloatR32}}(U, S, V)
 end
