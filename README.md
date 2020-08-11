@@ -2,12 +2,12 @@
 
 A more robust Float32 that preserves `float` performance.
 
-"An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
+> An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
  Perform your compututations carrying somewhat more than twice the precision
  of your data and somewhat more than twice the precision of your results.
  This rule has long served statistics, optimization, root-finding, geometry,
- and differential equations. Rare exceptions exist, of course."
- - (edited together for content from multiple writings of W. Kahan)
+ and differential equations. Rare exceptions exist, of course.
+ > (from writings of W. Kahan)
  
 "An old Rule-of-Thumb renders roundoff extremely unlikely to cause embarrassment:
 In all intermediate computation, perform arithmetic carrying somewhat more than
