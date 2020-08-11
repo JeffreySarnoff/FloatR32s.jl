@@ -92,7 +92,7 @@ Base.one(x::FloatR32) = one(FloatR32)
 
 Base.frexp(x::FloatR32) = frexp(value32(x)) # ??????????? and ldexp
 
-for F in (:-, :abs, :sign, :inv, :sqrt, :cbrt)
+for F in (:-, :abs, :inv, :sqrt, :cbrt)
   @eval Base.$F(x::FloatR32) = Rob32($F(value64(x)))
 end
 
