@@ -10,7 +10,7 @@ This rule has long served statistics, optimization, root-finding, geometry, stru
 analysis and differential equations. Rare exceptions exist, of course. Nothing is perfect."
 - W. Kahan, 2016
 
-"the simplest way to evade numerical embarrassment is to perform computation carrying extravagantly
+".. the simplest way to evade numerical embarrassment is to perform computation carrying extravagantly
 more precision throughout than you think necessary, and pray that it is enough. Usually somewhat
 more than twice the precision you trust in the data and seek in the results is enough."
 - W. Kahan, "How Futile are Mindless Assessments of Roundoff in Floating Point Computation", 2006
