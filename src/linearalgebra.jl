@@ -24,7 +24,7 @@ end
 
 LinearAlgebra.abs2(x::Array{FloatR32,N}) where {N} = Rob32(dot(x, x))
 LinearAlgebra.abs(x::Array{FloatR32,N}) where {N} = Rob32(sqrt(dot(x, x)))
-LinearAlgebra.dot(x::Array{FloatR32,N}, y::Array{FloatR32,N)) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
+LinearAlgebra.dot(x::Array{FloatR32,N}, y::Array{FloatR32,N}) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
 
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
