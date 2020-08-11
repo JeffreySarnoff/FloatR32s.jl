@@ -185,11 +185,14 @@ end
 
 Base.Array{N,Robust32}(x::Array{N,Float64}) = Rob32.(x)
 
-LinearAlgebra.tr(x::Matrix{Robust32}) = Rob32(tr(Matrix{Float64}(x))
-LinearAlgebra.det(x::Matrix{Robust32}) = Rob32(det(Matrix{Float64}(x))
-LinearAlgebra.inv(x::Matrix{Robust32}) = Rob32(inv(Matrix{Float64}(x))
-LinearAlgebra.sqrt(x::Matrix{Robust32}) = Rob32(sqrt(Matrix{Float64}(x))
-LinearAlgebra.exp(x::Matrix{Robust32}) = Rob32(exp(Matrix{Float64}(x))
+for F in (:tr, :det)
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(Matrix{Float64}(x))
+end
+
+for F in (:inv, :sqrt, :exp, :log, 
+          :sin, :tan, :csc, :cot, :asin, :atan, :acsc, :acot)
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32.($F(Matrix{Float64}(x))
+end
 
 LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(Array{N,Float64}(x))
 
