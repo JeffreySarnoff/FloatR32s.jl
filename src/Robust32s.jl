@@ -157,6 +157,16 @@ function Base.Matrix{Robust32}(x::Matrix{Float64}) = reinterpret(Robust32, x)
 function Base.Array{Float64,N}(x::Array{Robust32,N}) where {N} = reinterpret(Float64, x)
 function Base.Array{Robust32,N}(x::Array{Float64,N}) where {N} = reinterpret(Robust32, x)
 
+rewrap(m::Vector{Float64}) =
+    unsafe_wrap(Array{Robust32,1}, Ptr{Robust32}(pointer(m,1)), length(m))
+rewrap(m::Vector{Robust32}) =
+    unsafe_wrap(Array{Float64,1}, Ptr{Float64}(pointer(m,1)), length(m))
+rewrap(m::Matrix{Float64}) =
+    unsafe_wrap(Array{Robust32,2}, Ptr{Robust32}(pointer(m,1)), size(m))
+rewrap(m::Matrix{Robust32}) =
+    unsafe_wrap(Array{Float64,2}, Ptr{Float64}(pointer(m,1)), size(m))
+
+                                
 for F in (:+, :-, :*, :/, :\)
   @eval begin
     $F(x::Vector{Robust32}, y::Vector{Robust32}) = reinterpret(Robust32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
@@ -184,7 +194,10 @@ for F in (:inv, :sqrt, :exp, :log,
 end
 
 LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(reinterpret(Float64, x)))
-  
+
+LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(reinterpret(Float64,A)))
+LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(reinterpret(Float64,A)))
+
 end  # Robust32s
 
 #=
