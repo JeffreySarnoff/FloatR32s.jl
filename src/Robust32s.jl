@@ -24,6 +24,7 @@ struct Robust32 <: AbstractFloat
     Robust32(::Type{As64}, x::Float64) = new(x)
 end
 
+# internal use only
 Rob32(x::Float64) = Robust32(As64, x)
 
 Robust32(x::Robust32) = x
