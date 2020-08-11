@@ -1,18 +1,26 @@
 #=
 [  "/", "\\", 
    "adjoint", "adjoint!", "axpby!", "axpy!", "bunchkaufman", "bunchkaufman!", "cholesky", "cholesky!", "cond", "condskeel", 
-   "copy_transpose!", "copyto!", "cross", "det", "diag", "diagind", "diagm", "dot", 
-   "eigen", "eigen!", "eigmax", "eigmin", "eigvals", "eigvals!", "eigvecs", 
+   "copy_transpose!", "copyto!", "cross", 
+   # "det", "diag", 
+   "diagind", "diagm", 
+   # "dot", 
+   # "eigen", "eigen!", 
+   "eigmax", "eigmin", 
+   # "eigvals", "eigvals!", 
+    "eigvecs", 
    "factorize", "givens", "hessenberg", "hessenberg!", 
-   "isdiag", "ishermitian", "isposdef", "isposdef!", "issuccess", "issymmetric", "istril", "istriu", 
+   # "isdiag", "ishermitian", "isposdef", "isposdef!", "issuccess", "issymmetric", "istril", "istriu", 
    "kron", "ldiv!", "ldlt", "ldlt!", "lmul!", "logabsdet", "logdet", 
    "lowrankdowndate", "lowrankdowndate!", "lowrankupdate", "lowrankupdate!", 
    "lq", "lq!", "lu", "lu!", "lyap", 
    "mul!", "norm", "normalize", "normalize!", "nullspace", "opnorm", 
    "ordschur", "ordschur!", "pinv", "qr", "qr!", 
    "rank", "rdiv!", "reflect!", "rmul!", "rotate!", "schur", "schur!", 
-   "svd", "svd!", "svdvals", "svdvals!", "sylvester", 
-   "tr", "transpose", "transpose!", "tril", "tril!", "triu", "triu!", "×", "⋅" ]
+   # "svd", "svd!", "svdvals", "svdvals!", 
+   "sylvester", 
+   # "tr", "transpose", "transpose!", 
+   "tril", "tril!", "triu", "triu!", "×", "⋅" ]
 =#
 
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
