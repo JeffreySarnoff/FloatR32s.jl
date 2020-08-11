@@ -175,6 +175,7 @@ function LinearAlgebra.cholesky!(x::Matrix{FloatR32}, pivot=Val{false}; check=tr
    xx = rewrap(x)
    res = cholesky(xx, pivot(); check=check)
    yy = rewrap(res.factors)
+   x[:] = yy[:]
    return Cholesky{FloatR32, Matrix{FloatR32}}(yy, res.uplo, res.info)
 end
 
