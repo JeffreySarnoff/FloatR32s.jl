@@ -34,9 +34,6 @@ value32(x::Robust32) = Float32(x.val)
 
 Robust32(x::Float32) = Rob32(Float64(x))
 
-const InfR32 = Rob32(Inf)
-const NaNR32 = Rob32(NaN)
-
 #=
   to maintain the package intent correctly
      explicit construction of T requires the target become a Float32
@@ -46,11 +43,23 @@ Base.Float64(x::Robust32) = Float64(value32(x))
 Base.Float32(x::Robust32) = value32(x)
 Base.Float16(x::Robust32) = Float16(value32(x))
 
-for T in (:Float32, :Float16, :Signed, :Unsigned)
-   @eval Robust32(x::$T) = Robust32(Float64(X))
-end   
+Robust32(x::Float16) = Rob32(Float64(x))
+Robust32(x::BigFloat) = Rob32(Float64(Float32(x)))
 
-Base.show(io::IO, x::Robust32) = print(io, Float32(x))
+for T in (:Signed, :Unsigned)
+   @eval Robust32(x::$T) = Robust32(Float32(X))
+end
+
+for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8)
+  @eval begin
+    Base.$T(x::Robust32) = $T(value32(x))
+    Robust32(x::$T) = Robust32(Float32(x))
+  end
+end
+
+Base.Int32(x::Robust32) = Int32(value32(x))
+
+
 
 Base.promote_rule(::Type{Robust32}, ::Type{Base.IEEEFloat}) = Robust32
 Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Signed} = Robust32
