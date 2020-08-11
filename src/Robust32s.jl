@@ -14,7 +14,9 @@ end
 value64(x::Robust32) = x.val
 value32(x::Robust32) = Float32(x.val)
 
-Rob32(x::Float64) = Robust32(As64, x) # internal use only
+# internal use only
+Rob32(x::Float64) = Robust32(As64, x)
+Flo64(x::Robust32) = x.val
 
 Robust32(x::Robust32) = x # idempotency
 
