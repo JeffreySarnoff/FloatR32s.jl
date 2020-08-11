@@ -1,6 +1,7 @@
 #=
 [  "/", "\\", 
-   "adjoint", "adjoint!", "axpby!", "axpy!", "bunchkaufman", "bunchkaufman!", "cholesky", "cholesky!", "cond", "condskeel", 
+   # "adjoint", "adjoint!", 
+   "axpby!", "axpy!", "bunchkaufman", "bunchkaufman!", "cholesky", "cholesky!", "cond", "condskeel", 
    "copy_transpose!", "copyto!", "cross", 
    # "det", "diag", 
    "diagind", "diagm", 
