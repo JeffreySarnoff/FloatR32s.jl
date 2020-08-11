@@ -14,18 +14,25 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
                   # sincospi,
 
+struct As64 end
+
 struct Robust32 <: AbstractFloat
     val::Float64
+  
+    Robust32(x::Float64) = new(Float64(Float32(x)))
+    Robust32(::Type{As64}, x::Float64) = new(x)
 end
-
-Robust32(x::Robust32) = x
 
 value(x::Robust32) = x.val
 
-Robust32(x::Float32) = Robust32(Float64(x))
+@inline Rob32(x::Float64) = Robust32(As64, x)
 
-const InfR32 = Robust32(Inf)
-const NaNR32 = Robust32(NaN)
+Robust32(x::Robust32) = x
+
+Robust32(x::Float32) = Rob32(Float64(x))
+
+const InfR32 = Rob32(Inf)
+const NaNR32 = Rob32(NaN)
 
 #=
   to maintain the package intent correctly
@@ -116,24 +123,24 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
           :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
           :sinpi, :tan, :tand, :tanh)
-    @eval $F(x::Robust32) = Robust32($F(value(x)))
+    @eval $F(x::Robust32) = Rob32($F(value(x)))
 end
 
 for F in (:modf, :sincos, :sincosd) # , :sincospi)
   @eval function $F(x::Robust32)
             s, c = $F(value(x))
-            return Robust32(s), Robust32(c)
+            return Rob32(s), Rob32(c)
          end
 end
 
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
-    Robust32(evalpoly(value(x), map(value, p)))
+    Rob32(evalpoly(value(x), map(value, p)))
 end
 function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
-    Robust32(evalpoly(Float64(x), map(value, p)))
+    Rob32(evalpoly(Float64(x), map(value, p)))
 end
 function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
-    Robust32(evalpoly(value(x), p))
+    Rob32(evalpoly(value(x), p))
 end
 
 end  # Robust32s
