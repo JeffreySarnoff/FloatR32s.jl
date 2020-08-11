@@ -25,6 +25,16 @@
    "sylvester", 
    # "tr", "transpose", "transpose!", 
    "tril", "tril!", "triu", "triu!", "×", "⋅" ]
+
+   (:UnitUpperTriangular, :UnitLowerTriangular, :UpperHessenberg, :LowerHessenbert, :UpperTriangular, :LowerTriangular, :Tridiagonal, :SymTridiagonal, :Symmetric)
+
+   ["Adjoint", "BLAS", "Bidiagonal", "BunchKaufman", "Cholesky", "CholeskyPivoted", 
+    "Diagonal", "Eigen", "Factorization", "GeneralizedEigen", "GeneralizedSVD", "GeneralizedSchur", 
+    "Hermitian", "Hessenberg", "I", "LAPACK", "LAPACKException", "LDLt", "LQ", "LU", 
+    "LowerTriangular", "QR", "QRPivoted", "SVD", 
+    "Schur", "SymTridiagonal", "Symmetric", "Transpose", "Tridiagonal", 
+    "UniformScaling", "UnitLowerTriangular", "UnitUpperTriangular", "UpperHessenberg", "UpperTriangular"]
+
 =#
 
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
