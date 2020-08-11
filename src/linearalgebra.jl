@@ -28,7 +28,7 @@ for F in (:inv, :sqrt, :exp, :log,
     @eval LinearAlgebra.$F(x::Matrix{FloatR32}) = reinterpret(FloatR32, $F(reinterpret(Float64, x)))
 end
 
-LinearAlgebra.dot(x::Array{N,FloatR32}) where {N} = Rob32(dot(reinterpret(Float64, x)))
+LinearAlgebra.dot(x::Array{FloatR32,N}, y::Array{FloatR32,N) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
 
 LinearAlgebra.adjoint(x::Matrix{FloatR32}) = Adjoint(x)
 LinearAlgebra.transpose(x::Matrix{FloatR32}) = Transpose(x)
