@@ -21,6 +21,7 @@ module FloatR32s
 export FloatR32, ComplexR32
 
 import LinearAlgebra
+import SpecialFunctions
 
 struct As64 end # internal use only
 
@@ -167,5 +168,6 @@ rewrap(m::Matrix{ComplexR32}) =
     unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(pointer(m,1)), size(m))
 
 include("linearalgebra.jl")
+include("specialfunctions.jl")
 
 end  # FloatR32s
