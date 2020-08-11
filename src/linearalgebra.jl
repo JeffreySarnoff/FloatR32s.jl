@@ -1,5 +1,3 @@
-export tr, det, dot
-
 for F in (:+, :-, :*, :/, :\)
   @eval begin
     $F(x::Vector{FloatR32}, y::Vector{FloatR32}) = reinterpret(FloatR32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
