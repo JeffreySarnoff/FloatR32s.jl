@@ -14,8 +14,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
                   # sincospi,
 
-# internal use only
-struct As64 end 
+struct As64 end # internal use only
 
 struct Robust32 <: AbstractFloat
     val::Float64
@@ -24,15 +23,12 @@ struct Robust32 <: AbstractFloat
     Robust32(::Type{As64}, x::Float64) = new(x)
 end
 
-# internal use only
-Rob32(x::Float64) = Robust32(As64, x)
+Rob32(x::Float64) = Robust32(As64, x) # internal use only
 
-Robust32(x::Robust32) = x
+Robust32(x::Robust32) = x # idempotency
 
 value64(x::Robust32) = x.val
 value32(x::Robust32) = Float32(x.val)
-
-Robust32(x::Float32) = Rob32(Float64(x))
 
 #=
   to maintain the package intent correctly
@@ -43,23 +39,19 @@ Base.Float64(x::Robust32) = Float64(value32(x))
 Base.Float32(x::Robust32) = value32(x)
 Base.Float16(x::Robust32) = Float16(value32(x))
 
+Robust32(x::Float32) = Rob32(Float64(x))
 Robust32(x::Float16) = Rob32(Float64(x))
 Robust32(x::BigFloat) = Rob32(Float64(Float32(x)))
-
-for T in (:Signed, :Unsigned)
-   @eval Robust32(x::$T) = Robust32(Float32(X))
-end
 
 for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8)
   @eval begin
     Base.$T(x::Robust32) = $T(value32(x))
-    Robust32(x::$T) = Robust32(Float32(x))
+    Robust32(x::$T) = Rob32(Float32(x))
   end
 end
+Robust32(x::Unsigned) = Rob32(Float32(x))
 
-Base.Int32(x::Robust32) = Int32(value32(x))
-
-Base.promote_rule(::Type{Robust32}, ::Type{Base.IEEEFloat}) = Robust32
+Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Base.IEEEFloat} = Robust32
 Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Signed} = Robust32
 Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Unsigned} = Robust32
 
@@ -71,6 +63,9 @@ Base.convert(::Type{Robust32}, x::Float64) = Robust32(x)
 Base.convert(::Type{Robust32}, x::T) where {T<:Union{Float32, Float16}} = Robust32(x)
 Base.convert(::Type{Robust32}, x::T) where {T<:Signed} = Robust32(x)
 Base.convert(::Type{Robust32}, x::T) where {T<:Unsigned} = Robust32(x)
+
+Base.convert(::Type{Float64}, x::Robust32) = Float64(x)
+Base.convert(::Type{Float32}, x::Robust32) = Float32(x)
 
 #=
   to maintain the package intent correctly
