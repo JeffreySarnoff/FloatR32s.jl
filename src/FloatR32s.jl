@@ -48,7 +48,7 @@ const ComplexR32 = Complex{FloatR32}
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
 
-Base.Float64(x::FloatR32) = $T(value32(x))
+Base.Float64(x::FloatR32) = Float64(value32(x))
 Base.convert(::Type{Float64}, x::FloatR32) = Float64(x)
 Base.promote_rule(::Type{FloatR32}, ::Type{Float64}) = FloatR32
 
