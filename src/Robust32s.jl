@@ -190,7 +190,8 @@ for F in (:tr, :det)
 end
 
 for F in (:inv, :sqrt, :exp, :log, 
-          :sin, :tan, :csc, :cot, :asin, :atan, :acsc, :acot)
+          :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
+          :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32.($F(Matrix{Float64}(x))
 end
 
