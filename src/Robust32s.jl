@@ -230,7 +230,7 @@ function LinearAlgebra.svd(x::Matrix{Robust32})
 end
                                     
 function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
-    u, s, v = svd(rewrap(x); kw...)
+    u, s, v = svd!(rewrap(x); kw...)
     U = rewrap(u)
     S = rewrap(x)
     V = adjoint(rewrap(adjoint(v)))
@@ -238,16 +238,16 @@ function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
 end
 
 function LinearAlgebra.eigen(x::Matrix{Robust32}; kw...)
-    v, m = eigen(reinterpret(Float64, x); kw...)
-    V = reinterpret(ComplexR32, v)
-    M = reinterpret(ComplexR32, m)
+    v, m = eigen(rewrap(x); kw...)
+    V = rewrap(v)
+    M = rewrap(m)
     return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)                            
 end
 
 function LinearAlgebra.eigen!(x::Matrix{Robust32}; kw...)
-    v, m = eigen!(reinterpret(Float64, x); kw...)
-    V = reinterpret(ComplexR32, v)
-    M = reinterpret(ComplexR32, m)
+    v, m = eigen!(rewrap(x); kw...)
+    V = rewrap(v)
+    M = rewrap(m)
     return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)                            
 end
 
