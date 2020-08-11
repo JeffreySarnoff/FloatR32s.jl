@@ -46,6 +46,8 @@ for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
   end
 end
 
+Robust32(x::Bool) = x ? Rob32(1.0) : Rob32(0.0)
+
 #=
   to maintain the package intent correctly
      implicit construction of a Float64 does not require the target become a Float32
