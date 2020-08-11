@@ -35,6 +35,41 @@
     "Schur", "SymTridiagonal", "Symmetric", "Transpose", "Tridiagonal", 
     "UniformScaling", "UnitLowerTriangular", "UnitUpperTriangular", "UpperHessenberg", "UpperTriangular"]
 
+
+julia> listnames(:eigen)
+  list(23)
+  –––––––– ––––––– –––––––– –––––––– –––––––– –––––– ––––––– ––––––––– ––––––– –––––––– ––––––– –––––––––
+  chebspec circul  dingdong forsythe grcar    invol  minij   oscillate pascal  rosser   tridiag wilkinson
+  chow     clement fiedler  frank    hadamard lotkin neumann parter    poisson sampling wathen
+
+julia> listnames(:graph)
+  list(3)
+  ––––––– ––––––– ––––––––––
+  erdrey  gilbert smallworld
+
+julia> listnames(:illcond)
+  list(20)
+  –––––––– ––––– ––––––– ––––– –––––– ––––––––– –––––– ––––––– ––––––– ––––
+  cauchy   frank hilb    invol kms    moler     pascal prolate rosser  triw
+  forsythe golub invhilb kahan lotkin oscillate pei    randsvd tridiag vand
+
+julia> listnames(:inverse)
+  list(21)
+  –––––––– –––––––– –––––––– ––––––– ––––– –––––– ––––– –––––– ––––––– ––––––– ––––
+  cauchy   fiedler  hadamard invhilb kahan lehmer magic moler  pei     tridiag vand
+  clement  forsythe hilb     invol   kms   lotkin minij pascal poisson triw
+
+julia> listnames(:posdef)
+  list(14)
+  –––––––– –––––– –––– ––––––– ––– –––––– ––––– ––––– ––––––––– –––––– ––– ––––––– ––––––– ––––––
+  cauchy   circul hilb invhilb kms lehmer minij moler oscillate pascal pei poisson tridiag wathen
+
+julia> listnames(:symmetric)
+  list(21)
+  –––––––– –––––––– ––––––– ––––––– –––––– ––––– ––––––––– ––––––– –––––––– ––––––– –––––––––
+  cauchy   clement  fiedler hilb    kms    minij oscillate pei     prolate  tridiag wilkinson
+  circul   dingdong hankel  invhilb lehmer moler pascal    poisson randcorr wathen
+
 =#
 
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
@@ -125,8 +160,22 @@ end
 function LinearAlgebra.lu!(x::Matrix{FloatR32}, pivot=Val{true}; check=true)
    xx = rewrap(x)
    res = lu(xx, pivot(); check=check)
-   x = rewrap(res.factors)
-   return LU{FloatR32, Matrix{FloatR32}}(x, res.ipiv, res.info)
+   yy = rewrap(res.factors)
+   return LU{FloatR32, Matrix{FloatR32}}(yy, res.ipiv, res.info)
+end
+
+function LinearAlgebra.cholesky(x::Matrix{FloatR32}, pivot=Val{false}; check=true)
+   xx = rewrap(x)
+   res = cholesky(xx, pivot(); check=check)
+   yy = rewrap(res.factors)
+   return Cholesky{FloatR32, Matrix{FloatR32}}(yy, res.uplo, res.info)
+end
+
+function LinearAlgebra.cholesky!(x::Matrix{FloatR32}, pivot=Val{false}; check=true)
+   xx = rewrap(x)
+   res = cholesky(xx, pivot(); check=check)
+   yy = rewrap(res.factors)
+   return Cholesky{FloatR32, Matrix{FloatR32}}(yy, res.uplo, res.info)
 end
 
 function LinearAlgebra.lmul!(x::Matrix{FloatR32}, y::Matrix{FloatR32})
