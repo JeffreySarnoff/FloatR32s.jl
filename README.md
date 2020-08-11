@@ -9,6 +9,11 @@ A more robust Float32 that preserves `float` performance.
  and differential equations. Rare exceptions exist, of course.
  > (adapted from W. Kahan)
  
+ This package implements that Rule-of-Thumb in a highly performant manner.
+ To offer the desired performance, this package works with `Float32` data
+ and provides `Float32` results.  This is handled automatically; so as long
+ as you are committed to working with data and results that are `Float32s`,
+ all is well.
  
  
 ".. the simplest way to evade numerical embarrassment is to perform computation carrying extravagantly
