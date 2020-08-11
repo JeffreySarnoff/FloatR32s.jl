@@ -14,7 +14,8 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
                   # sincospi,
 
-struct As64 end
+# internal use only
+struct As64 end 
 
 struct Robust32 <: AbstractFloat
     val::Float64
@@ -26,7 +27,7 @@ end
 value64(x::Robust32) = x.val
 value32(x::Robust32) = Float32(x.val)
 
-@inline Rob32(x::Float64) = Robust32(As64, x)
+Rob32(x::Float64) = Robust32(As64, x)
 
 Robust32(x::Robust32) = x
 
