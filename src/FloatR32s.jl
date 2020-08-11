@@ -20,9 +20,7 @@ module FloatR32s
 
 export FloatR32, ComplexR32
 
-using Pkg
-import LinearAlgebra
-import SpecialFunctions
+using LinearAlgebra
 
 struct As64 end # internal use only
 
