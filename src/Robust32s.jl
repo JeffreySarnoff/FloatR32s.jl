@@ -9,6 +9,13 @@
      explicit construction of T requires the target become a Float32
 =#
 
+"""
+    FloatR32s
+
+A module for robust Float32 computation.
+
+Exports: `FloatR32`, `ComplexR32`
+"""
 module FloatR32s
 
 export FloatR32, ComplexR32
