@@ -2,7 +2,8 @@
 [  "/", "\\", 
    # "adjoint", "adjoint!", 
    "axpby!", "axpy!", "bunchkaufman", "bunchkaufman!", "cholesky", "cholesky!", "cond", "condskeel", 
-   "copy_transpose!", "copyto!", "cross", 
+   "copy_transpose!", "copyto!",
+   # "cross", 
    # "det", "diag", 
    "diagind", "diagm", 
    # "dot", 
@@ -14,7 +15,9 @@
    # "isdiag", "ishermitian", "isposdef", "isposdef!", "issuccess", "issymmetric", "istril", "istriu", 
    "kron", "ldiv!", "ldlt", "ldlt!", "lmul!", "logabsdet", "logdet", 
    "lowrankdowndate", "lowrankdowndate!", "lowrankupdate", "lowrankupdate!", 
-   "lq", "lq!", "lu", "lu!", "lyap", 
+   "lq", "lq!", 
+   # "lu", "lu!", 
+   "lyap", 
    "mul!", "norm", "normalize", "normalize!", "nullspace", "opnorm", 
    "ordschur", "ordschur!", "pinv", "qr", "qr!", 
    "rank", "rdiv!", "reflect!", "rmul!", "rotate!", "schur", "schur!", 
@@ -25,7 +28,7 @@
 =#
 
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
-     tr, det, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
+     tr, det, dot, cross, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
      svdvals, svdvals!, svd, svd!, eigvals, eigvals!, eigvecs, eigen, eigen!
 
 for F in (:+, :-, :*, :/, :\)
@@ -52,9 +55,8 @@ for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric
   @eval LinearAlgebra.$F(x::Matrix{FloatR32}) = $F(reinterpret(Float64, x))
 end
 
-LinearAlgebra.abs2(x::Array{FloatR32,N}) where {N} = Rob32(dot(x, x))
-LinearAlgebra.abs(x::Array{FloatR32,N}) where {N} = Rob32(sqrt(dot(x, x)))
 LinearAlgebra.dot(x::Array{FloatR32,N}, y::Array{FloatR32,N}) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
+LinearAlgebra.cross(x::Array{FloatR32,1}, y::Array{FloatR32,1}) where {N} = rewrap(cross(rewrap(x), rewrap(y)))
 
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
@@ -102,3 +104,45 @@ function LinearAlgebra.eigen!(x::Matrix{FloatR32}; kw...)
     M = rewrap(m)
     return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)
 end
+
+function LinearAlgebra.lu(x::Matrix{FloatR32}, pivot=Val{true}; check=true)
+   xx = rewrap(x)
+   res = lu(xx, pivot(); check=check)
+   yy = rewrap(res.factors)
+   return LU{FloatR32, Matrix{FloatR32}}(yy, res.ipiv, res.info)
+end
+
+function LinearAlgebra.lu!(x::Matrix{FloatR32}, pivot=Val{true}; check=true)
+   xx = rewrap(x)
+   res = lu(xx, pivot(); check=check)
+   x = rewrap(res.factors)
+   return LU{FloatR32, Matrix{FloatR32}}(x, res.ipiv, res.info)
+end
+
+function LinearAlgebra.lmul!(x::Matrix{FloatR32}, y::Matrix{FloatR32})
+   xx = rewrap(x)
+   yy = rewrap(y)
+   res = lmul!(xx, yy)
+   return rewrap(res)
+end
+
+function LinearAlgebra.lmul!(x::AbstractMatrix{FloatR32}, y::AbstractVector{FloatR32})
+   xx = rewrap(x)
+   yy = rewrap(y)
+   res = lmul!(xx, yy)
+   return rewrap(res)
+end
+
+   
+#=
+
+lmul!(::LinearAlgebra.LQPackedQ{FloatR32,Matrix{FloatR32}}, ::Vector{FloatR32})
+
+function LinearAlgebra.lq(x::Matrix{FloatR32})
+   xx = rewrap(x)
+   res = lq(xx)
+   yy = rewrap(res.factors)
+   tt = rewrap(res.τ)
+   return LQ{FloatR32, Matrix{FloatR32}}(yy, tt)
+end
+=#
