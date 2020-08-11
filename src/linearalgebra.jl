@@ -1,4 +1,3 @@
-
 for F in (:+, :-, :*, :/, :\)
   @eval begin
     $F(x::Vector{Robust32}, y::Vector{Robust32}) = reinterpret(Robust32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
