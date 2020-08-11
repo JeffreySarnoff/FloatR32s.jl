@@ -224,14 +224,14 @@ function LinearAlgebra.eigen(x::Matrix{Robust32}; kw...)
     v, m = eigen(rewrap(x); kw...)
     V = rewrap(v)
     M = rewrap(m)
-    return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)                            
+    return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)
 end
 
 function LinearAlgebra.eigen!(x::Matrix{Robust32}; kw...)
     v, m = eigen!(rewrap(x); kw...)
     V = rewrap(v)
     M = rewrap(m)
-    return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)                            
+    return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)
 end
 
 end  # Robust32s
