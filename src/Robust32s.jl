@@ -40,9 +40,6 @@ const ComplexR32 = Complex{FloatR32}
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
 
-#=
-=#
-
 for T in (:BigFloat, :Float64, :Float32, :Float16)
   @eval begin
     Base.$T(x::FloatR32) = $T(value32(x))
