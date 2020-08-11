@@ -201,6 +201,9 @@ end
 
 LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(reinterpret(Float64, x)))
 
+LinearAlgebra.adjoint(x::Matrix{Robust32}) = Adjoint(x)
+LinearAlgebra.transpose(x::Matrix{Robust32}) = Transpose(x)p
+                            
 LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(reinterpret(Float64,A); kw...))
 LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(reinterpret(Float64,A); kw...))
 LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(reinterpret(Float64,A)))
@@ -221,7 +224,21 @@ function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
     V = adjoint(rewrap(adjoint(v)))
     return U, S, V
 end
-                                
+
+function LinearAlgebra.eigen(x::Matrix{Robust32}; kw...)
+    v, m = eigen(reinterpret(Float64, x); kw...)
+    V = reinterpret(ComplexR32, v)
+    M = reinterpret(ComplexR32, m)
+    return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)                            
+end
+
+function LinearAlgebra.eigen!(x::Matrix{Robust32}; kw...)
+    v, m = eigen!(reinterpret(Float64, x); kw...)
+    V = reinterpret(ComplexR32, v)
+    M = reinterpret(ComplexR32, m)
+    return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)                            
+end
+
 end  # Robust32s
 
 #=
