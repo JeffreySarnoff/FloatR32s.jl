@@ -23,7 +23,8 @@ struct Robust32 <: AbstractFloat
     Robust32(::Type{As64}, x::Float64) = new(x)
 end
 
-value(x::Robust32) = x.val
+value64(x::Robust32) = x.val
+value32(x::Robust32) = Float32(x.val)
 
 @inline Rob32(x::Float64) = Robust32(As64, x)
 
@@ -89,12 +90,12 @@ for F in (:sign, :exponent, :significand)
 end
 
 for F in (:-, :abs, :sign, :inv, :sqrt, :cbrt)
-  @eval $F(x::Robust32) = Robust32($F(value(x)))
+  @eval $F(x::Robust32) = Rob32($F(value64(x)))
 end
 
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   @eval begin
-    $F(x::Robust32, y::Robust32) = $F(value(x), value(y))
+    $F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
     $F(x::Robust32, y::Real) = $F(promote(x,y)...)
     $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
@@ -102,7 +103,7 @@ end
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign)
   @eval begin
-    $F(x::Robust32, y::Robust32) = Robust32($F(value(x), value(y)))
+    $F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
     $F(x::Robust32, y::Real) = $F(promote(x,y)...)
     $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
@@ -123,24 +124,24 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
           :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
           :sinpi, :tan, :tand, :tanh)
-    @eval $F(x::Robust32) = Rob32($F(value(x)))
+    @eval $F(x::Robust32) = Rob32($F(value64(x)))
 end
 
 for F in (:modf, :sincos, :sincosd) # , :sincospi)
   @eval function $F(x::Robust32)
-            s, c = $F(value(x))
+            s, c = $F(value64(x))
             return Rob32(s), Rob32(c)
          end
 end
 
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
-    Rob32(evalpoly(value(x), map(value, p)))
+    Rob32(evalpoly(value64(x), map(value64, p)))
 end
 function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
-    Rob32(evalpoly(Float64(x), map(value, p)))
+    Rob32(evalpoly(Float64(x), map(value64, p)))
 end
 function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
-    Rob32(evalpoly(value(x), p))
+    Rob32(evalpoly(value64(x), p))
 end
 
 end  # Robust32s
