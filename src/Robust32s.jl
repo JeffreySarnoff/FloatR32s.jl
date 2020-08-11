@@ -1,7 +1,8 @@
 module Robust32s
 
-export Robust32, InfR32, NaNR32
+export Robust32
 
+#=
 import Base: ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
              signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
@@ -13,6 +14,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
                   # sincospi,
+=#
 
 struct As64 end # internal use only
 
@@ -23,37 +25,37 @@ struct Robust32 <: AbstractFloat
     Robust32(::Type{As64}, x::Float64) = new(x)
 end
 
+value64(x::Robust32) = x.val
+value32(x::Robust32) = Float32(x.val)
+
 Rob32(x::Float64) = Robust32(As64, x) # internal use only
 
 Robust32(x::Robust32) = x # idempotency
-
-value64(x::Robust32) = x.val
-value32(x::Robust32) = Float32(x.val)
 
 #=
   to maintain the package intent correctly
      explicit construction of T requires the target become a Float32
 =#
-Base.BigFloat(x::Robust32) = BigFloat(value32(x))
-Base.Float64(x::Robust32) = Float64(value32(x))
-Base.Float32(x::Robust32) = value32(x)
-Base.Float16(x::Robust32) = Float16(value32(x))
+float6432(x) = Float64(Float32(x))
 
-Robust32(x::Float32) = Rob32(Float64(x))
-Robust32(x::Float16) = Rob32(Float64(x))
-Robust32(x::BigFloat) = Rob32(Float64(Float32(x)))
-
-for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8)
+for T in (:BigFloat, :Float64, :Float32, :Float16)
   @eval begin
     Base.$T(x::Robust32) = $T(value32(x))
-    Robust32(x::$T) = Rob32(Float32(x))
+    Robust32(x::$T) = Rob(float6432(x))
+    Base.convert(::Type{$T}, x::Robust32) = $T(x)
+    Base.promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
   end
 end
-Robust32(x::Unsigned) = Rob32(Float32(x))
 
-Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Base.IEEEFloat} = Robust32
-Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Signed} = Robust32
-Base.promote_rule(::Type{Robust32}, ::Type{T}) where {T<:Unsigned} = Robust32
+for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
+                   :UInt128, :UInt64, :UInt32, :UInt16, :UInt8)
+  @eval begin
+    Base.$T(x::Robust32) = $T(value32(x))
+    Robust32(x::$T) = Rob32(float6432(x))
+    Base.convert(::Type{$T}, x::Robust32) = $T(x)
+    Base.promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
+  end
+end
 
 #=
   to maintain the package intent correctly
