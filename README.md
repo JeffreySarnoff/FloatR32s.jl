@@ -27,9 +27,10 @@ A more robust Float32 that preserves `float` performance.
  ```julia
 using FloatR32s
  
-a = sqrt(FloatR32(2))
-b = sqrt(Floa32(0.5))
-c = a * b
+julia> a = sqrt(FloatR32(2))
+
+b = sqrt(FloatR32(0.5))
+c = Float32(a * b)
  
 # compare
 sqrt(Float32(2)) * sqrt(Float32(0.5))
