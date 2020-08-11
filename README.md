@@ -1,2 +1,2 @@
-# Robust32s.jl
+# Float32Rs.jl
 A more robust kind of Float32.
