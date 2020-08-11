@@ -27,19 +27,29 @@ A more robust Float32 that preserves `float` performance.
  julia> Pkg.add("FloatR32s")
  ```
  
- ## Basic Use
+## Basic Examples
  
  ```julia
 using FloatR32s
- 
-julia> a = sqrt(FloatR32(2))
 
-b = sqrt(FloatR32(0.5))
-c = Float32(a * b)
- 
-# compare
-sqrt(Float32(2)) * sqrt(Float32(0.5))
+julia> a, b = sqrt.(Float32.((2.0, 0.5)))
+(1.4142135f0, 0.70710677f0)
+
+julia> c = a * b    # product of Float32s
+0.99999994f0
+
+julia> a, b = sqrt.(FloatR32.((2.0, 0.5)))
+(1.4142135f0, 0.70710677f0)
+
+julia> c = a * b    # product of FloatR32s
+1.0f0
 ```
+
+
+----
+
+----
+
 ".. the simplest way to evade numerical embarrassment is to perform computation carrying extravagantly
 more precision throughout than you think necessary, and pray that it is enough. Usually somewhat
 more than twice the precision you trust in the data and seek in the results is enough."
