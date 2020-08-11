@@ -161,6 +161,7 @@ function LinearAlgebra.lu!(x::Matrix{FloatR32}, pivot=Val{true}; check=true)
    xx = rewrap(x)
    res = lu(xx, pivot(); check=check)
    yy = rewrap(res.factors)
+   xx[:] = yy[:]
    return LU{FloatR32, Matrix{FloatR32}}(yy, res.ipiv, res.info)
 end
 
