@@ -2,6 +2,8 @@ module Robust32s
 
 export Robust32
 
+import LinearAlgebra
+
 struct As64 end # internal use only
 
 struct Robust32 <: AbstractFloat
@@ -147,6 +149,47 @@ end
 function Base.evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
     Rob32(evalpoly(value64(x), p))
 end
+
+function Base.Vector{Float64}(x::Vector{Robust32})
+    n = length(x)
+    res = Vector{Float64}(undef, n)
+    for idx in 1:n
+       @inbounds res[idx] = x[idx].val
+    end
+    return res
+end
+
+Base.Vector{Robust32}(x::Matrix{Float64}) = Rob32.(x)
+
+function Base.Matrix{Float64}(x::Matrix{Robust32})
+    rows, cols = size(x)
+    res = Matrix{Float64}(undef, rows, cols)
+    for r in 1:rows
+        for c in 1:cols
+           @inbounds res[r,c] = x[r,c].val
+        end
+    end
+    return res
+end
+
+Base.Matrix{Robust32}(x::Matrix{Float64}) = Rob32.(x)
+
+function Base.Array{N,Float64}(x::Array{N,Robust32}) where {N}
+    dims = size(x)
+    res = Array{Float64}(undef, dims)
+    for idx in eachindex(x)
+       @inbounds res[idx] = x[idx].val
+    end
+    return res
+end
+
+Base.Array{N,Robust32}(x::Array{N,Float64}) = Rob32.(x)
+
+LinearAlgebra.tr(x::Matrix{Robust32}) = Rob32(tr(Matrix{Float64}(x))
+LinearAlgebra.det(x::Matrix{Robust32}) = Rob32(det(Matrix{Float64}(x))
+LinearAlgebra.inv(x::Matrix{Robust32}) = Rob32(inv(Matrix{Float64}(x))
+
+LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(Array{N,Float64}(x))
 
 end  # Robust32s
 
