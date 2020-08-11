@@ -162,6 +162,6 @@ rewrap(m::Matrix{ComplexF64}) =
 rewrap(m::Matrix{ComplexR32}) =
     unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(pointer(m,1)), size(m))
 
-include("linalg.jl")
+include("linearalgebra.jl")
 
 end  # FloatR32s
