@@ -15,6 +15,11 @@ A more robust Float32 that preserves `float` performance.
  as you are committed to working with `Float32` data and obtaining `Float32`
  results, all is well.
  
+ ### exports
+ 
+ - `FloatR32` a robust 32bit floating point type
+ - `ComplexR32` a robust 32bit complex floating point type
+ 
  ### installation
  
  ```julia
