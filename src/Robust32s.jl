@@ -198,6 +198,8 @@ LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(reinterpret(Float6
 LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(reinterpret(Float64,A)))
 LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(reinterpret(Float64,A)))
 
+for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric, :istril, :istriu)
+  @eval LinearAlgebra.$F(x::Matrix{Robust32}) = $F(reinterpret(Float64, x))                              
 end  # Robust32s
 
 #=
