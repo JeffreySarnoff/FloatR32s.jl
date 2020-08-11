@@ -168,6 +168,15 @@ rewrap(m::Matrix{Float64}) =
 rewrap(m::Matrix{Robust32}) =
     unsafe_wrap(Array{Float64,2}, Ptr{Float64}(pointer(m,1)), size(m))
 
+rewrap(m::Vector{ComplexF64}) =
+    unsafe_wrap(Array{ComplexR32,1}, Ptr{ComplexR32}(pointer(m,1)), length(m))
+rewrap(m::Vector{ComplexR32}) =
+    unsafe_wrap(Array{ComplexF64,1}, Ptr{ComplexF64}(pointer(m,1)), length(m))
+rewrap(m::Matrix{ComplexF64}) =
+    unsafe_wrap(Array{ComplexR32,2}, Ptr{ComplexR32}(pointer(m,1)), size(m))
+rewrap(m::Matrix{ComplexR32}) =
+    unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(pointer(m,1)), size(m))
+
                                 
 for F in (:+, :-, :*, :/, :\)
   @eval begin
@@ -205,25 +214,25 @@ LinearAlgebra.adjoint(x::Matrix{Robust32}) = Adjoint(x)
 LinearAlgebra.transpose(x::Matrix{Robust32}) = Transpose(x)
 
 # diag diagm diagind
-LinearAlgebra.diag(x::Matrix{Robust32}) = rewrap(diag(reinterpret(Float64, x)))
+LinearAlgebra.diag(x::Matrix{Robust32}) = rewrap(diag(rewrap(Float64, x)))
                                 
-LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(reinterpret(Float64,A); kw...))
-LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(reinterpret(Float64,A); kw...))
-LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(reinterpret(Float64,A)))
-LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(reinterpret(Float64,A)))
+LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(rewrap(A); kw...))
+LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(rewrap(A); kw...))
+LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(rewrap(A)))
+LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(rewrap(A)))
 
 function LinearAlgebra.svd(x::Matrix{Robust32})
-    u, s, v = svd(reinterpret(Float64, x))
-    U = reinterpret(Robust32, u)
-    S = reinterpret(Robust32, x)
+    u, s, v = svd(rewrap(x))
+    U = rewrap(u)
+    S = rewrap(x)
     V = adjoint(rewrap(adjoint(v)))
     return U, S, V
 end
                                     
 function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
-    u, s, v = svd(reinterpret(Float64, x); kw...)
-    U = reinterpret(Robust32, u)
-    S = reinterpret(Robust32, x)
+    u, s, v = svd(rewrap(x); kw...)
+    U = rewrap(u)
+    S = rewrap(x)
     V = adjoint(rewrap(adjoint(v)))
     return U, S, V
 end
