@@ -75,52 +75,52 @@ const FloatR32_1 = Rob32(1.0)
 
 FloatR32(x::Bool) = x ? FloatR32_1 : FloatR32_0
 
-Base.eps(x::FloatR32) = eps(value32(x))
-Base.significand(x::FloatR32) = significand(value32(x))
-Base.exponent(x::FloatR32) = exponent(value32(x))
-Base.sign(x::FloatR32) = exponent(value32(x))
-Base.iszero(x::FloatR32) = iszero(value32(x))
-Base.isone(x::FloatR32) = isone(value32(x))
-Base.isfinite(x::FloatR32) = isfinite(value32(x))
-Base.issubnormal(x::FloatR32) = issubnormal(value32(x))
-Base.isinf(x::FloatR32) = isinf(value64(x))
-Base.isnan(x::FloatR32) = isnan(value64(x))
+Base.eps(x::FloatR32) = Base.eps(value32(x))
+Base.significand(x::FloatR32) = Base.significand(value32(x))
+Base.exponent(x::FloatR32) = Base.exponent(value32(x))
+Base.sign(x::FloatR32) = Base.exponent(value32(x))
+Base.iszero(x::FloatR32) = Base.iszero(value32(x))
+Base.isone(x::FloatR32) = Base.isone(value32(x))
+Base.isfinite(x::FloatR32) = Base.isfinite(value32(x))
+Base.issubnormal(x::FloatR32) = Base.issubnormal(value32(x))
+Base.isinf(x::FloatR32) = Base.isinf(value64(x))
+Base.isnan(x::FloatR32) = Base.isnan(value64(x))
 
-Base.signbit(x::FloatR32) = signbit(value32(x))
+Base.signbit(x::FloatR32) = Base.signbit(value32(x))
 
 Base.zero(::Type{FloatR32}) = FloatR32_0
 Base.one(::Type{FloatR32}) = FloatR32_1
-Base.zero(x::FloatR32) = zero(FloatR32)
-Base.one(x::FloatR32) = one(FloatR32)
+Base.zero(x::FloatR32) = Base.zero(FloatR32)
+Base.one(x::FloatR32) = Base.one(FloatR32)
 
-Base.frexp(x::FloatR32) = frexp(value32(x)) # ??????????? and ldexp
+# Base.frexp(x::FloatR32) = Base.frexp(value32(x)) # ??????????? and ldexp
 
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
-  @eval Base.$F(x::FloatR32) = Rob32($F(value64(x)))
+  @eval Base.$F(x::FloatR32) = Rob32(Base.$F(value64(x)))
 end
 
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   @eval begin
-    Base.$F(x::FloatR32, y::FloatR32) = $F(value32(x), value32(y))
-    Base.$F(x::FloatR32, y::Real) = $F(promote(x,y)...)
-    Base.$F(x::Real, y::FloatR32) = $F(promote(x,y)...)
+    Base.$F(x::FloatR32, y::FloatR32) = Base.$F(value32(x), value32(y))
+    Base.$F(x::FloatR32, y::Real) = Base.$F(promote(x,y)...)
+    Base.$F(x::Real, y::FloatR32) = Base.$F(promote(x,y)...)
   end  
 end
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign)
   @eval begin
-    Base.$F(x::FloatR32, y::FloatR32) = Rob32($F(value64(x), value64(y)))
-    Base.$F(x::FloatR32, y::Real) = $F(promote(x,y)...)
-    Base.$F(x::Real, y::FloatR32) = $F(promote(x,y)...)
+    Base.$F(x::FloatR32, y::FloatR32) = Rob32(Base.$F(value64(x), value64(y)))
+    Base.$F(x::FloatR32, y::Real) = Base.$F(promote(x,y)...)
+    Base.$F(x::Real, y::FloatR32) = Base.$F(promote(x,y)...)
   end  
 end
 
 for F in (:hypot, :clamp)
   @eval begin
-    Base.$F(x::FloatR32, y::FloatR32, z::FloatR32) = FloatR32($F(value(x), value(y), value(z)))
-    Base.$F(x::FloatR32, y::Real, z::Real) = $F(promote(x,y,z)...)
-    Base.$F(x::Real, y::FloatR32, z::Real) = $F(promote(x,y,z)...)
-    Base.$F(x::Real, y::Real, z::FloatR32) = $F(promote(x,y,z)...)
+    Base.$F(x::FloatR32, y::FloatR32, z::FloatR32) = FloatR32(Base.$F(value(x), value(y), value(z)))
+    Base.$F(x::FloatR32, y::Real, z::Real) = Base.$F(promote(x,y,z)...)
+    Base.$F(x::Real, y::FloatR32, z::Real) = Base.$F(promote(x,y,z)...)
+    Base.$F(x::Real, y::Real, z::FloatR32) = Base.$F(promote(x,y,z)...)
   end  
 end
 
@@ -130,7 +130,7 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
           :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
           :sinpi, :tan, :tand, :tanh)
-    @eval Base.Math.$F(x::FloatR32) = Rob32($F(value64(x)))
+    @eval Base.Math.$F(x::FloatR32) = Rob32(Base.$F(value64(x)))
 end
 
 for F in (:modf, :sincos, :sincosd) # , :sincospi)
@@ -143,32 +143,32 @@ end
 # ?????? @evalpoly
 
 function Base.evalpoly(x::FloatR32, p::NTuple{N, FloatR32}) where {N}
-    Rob32(evalpoly(value64(x), map(value64, p)))
+    Rob32(Base.evalpoly(value64(x), map(value64, p)))
 end
 function Base.evalpoly(x::T, p::NTuple{N, FloatR32}) where {T,N}
-    Rob32(evalpoly(Float64(x), map(value64, p)))
+    Rob32(Base.evalpoly(Float64(x), map(value64, p)))
 end
 function Base.evalpoly(x::FloatR32, p::NTuple{N, T}) where {T,N}
-    Rob32(evalpoly(value64(x), p))
+    Rob32(Base.evalpoly(value64(x), p))
 end
 
 rewrap(m::Vector{Float64}) =
-    unsafe_wrap(Array{FloatR32,1}, Ptr{FloatR32}(pointer(m,1)), length(m))
+    unsafe_wrap(Array{FloatR32,1}, Ptr{FloatR32}(Base.pointer(m,1)), Base.length(m))
 rewrap(m::Vector{FloatR32}) =
-    unsafe_wrap(Array{Float64,1}, Ptr{Float64}(pointer(m,1)), length(m))
+    unsafe_wrap(Array{Float64,1}, Ptr{Float64}(Base.pointer(m,1)), Base.length(m))
 rewrap(m::Matrix{Float64}) =
-    unsafe_wrap(Array{FloatR32,2}, Ptr{FloatR32}(pointer(m,1)), size(m))
+    unsafe_wrap(Array{FloatR32,2}, Ptr{FloatR32}(Base.pointer(m,1)), Base.size(m))
 rewrap(m::Matrix{FloatR32}) =
-    unsafe_wrap(Array{Float64,2}, Ptr{Float64}(pointer(m,1)), size(m))
+    unsafe_wrap(Array{Float64,2}, Ptr{Float64}(Base.pointer(m,1)), Base.size(m))
 
 rewrap(m::Vector{ComplexF64}) =
-    unsafe_wrap(Array{ComplexR32,1}, Ptr{ComplexR32}(pointer(m,1)), length(m))
+    unsafe_wrap(Array{ComplexR32,1}, Ptr{ComplexR32}(Base.pointer(m,1)), Base.length(m))
 rewrap(m::Vector{ComplexR32}) =
-    unsafe_wrap(Array{ComplexF64,1}, Ptr{ComplexF64}(pointer(m,1)), length(m))
+    unsafe_wrap(Array{ComplexF64,1}, Ptr{ComplexF64}(Base.pointer(m,1)), Base.length(m))
 rewrap(m::Matrix{ComplexF64}) =
-    unsafe_wrap(Array{ComplexR32,2}, Ptr{ComplexR32}(pointer(m,1)), size(m))
+    unsafe_wrap(Array{ComplexR32,2}, Ptr{ComplexR32}(Base.pointer(m,1)), Base.size(m))
 rewrap(m::Matrix{ComplexR32}) =
-    unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(pointer(m,1)), size(m))
+    unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(Base.pointer(m,1)), Base.size(m))
 
 include("linearalgebra.jl")
 
