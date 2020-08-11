@@ -172,11 +172,6 @@ rewrap(m::Matrix{ComplexF64}) =
 rewrap(m::Matrix{ComplexR32}) =
     unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(pointer(m,1)), size(m))
 
-function __init__()
-  linalg = joinpath(@__DIR__, "linearalgebra.jl")
-  if isdefined(Main, :LinearAlgebra)
-      include(linalg)
-  end
-end
+include("linearalgebra.jl")
 
 end  # FloatR32s
