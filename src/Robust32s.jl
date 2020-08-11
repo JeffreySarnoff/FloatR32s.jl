@@ -46,7 +46,10 @@ for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
   end
 end
 
-Robust32(x::Bool) = x ? Rob32(1.0) : Rob32(0.0)
+const Robust32_0 = Rob32(0.0)
+const Robust32_1 = Rob32(1.0)
+
+Robust32(x::Bool) = x ? Robust32_1 : Robust32_0
 
 #=
   to maintain the package intent correctly
@@ -79,8 +82,8 @@ Base.isnan(x::Robust32) = isnan(value64(x))
 
 Base.signbit(x::Robust32) = signbit(value32(x))
 
-Base.zero(::Type{Robust32}) = Rob32(0.0)
-Base.one(::Type{Robust32}) = Rob32(1.0)
+Base.zero(::Type{Robust32}) = Robust32_0
+Base.one(::Type{Robust32}) = Robust32_1
 Base.zero(x::Robust32) = zero(Robust32)
 Base.one(x::Robust32) = one(Robust32)
 
