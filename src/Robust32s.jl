@@ -195,7 +195,7 @@ for F in (:inv, :sqrt, :exp, :log,
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32.($F(Matrix{Float64}(x))
 end
 
-LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(Array{N,Float64}(x))
+LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(Array{N,Float64}(x)))
 
 end  # Robust32s
 
