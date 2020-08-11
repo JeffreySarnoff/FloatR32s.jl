@@ -47,6 +47,7 @@ end
   to maintain the package intent correctly
      implicit construction of a Float64 does not require the target become a Float32
 =# 
+#=
 Base.convert(::Type{Robust32}, x::Float64) = Robust32(x)
 Base.convert(::Type{Robust32}, x::T) where {T<:Union{Float32, Float16}} = Robust32(x)
 Base.convert(::Type{Robust32}, x::T) where {T<:Signed} = Robust32(x)
@@ -54,60 +55,58 @@ Base.convert(::Type{Robust32}, x::T) where {T<:Unsigned} = Robust32(x)
 
 Base.convert(::Type{Float64}, x::Robust32) = Float64(x)
 Base.convert(::Type{Float32}, x::Robust32) = Float32(x)
+=#
 
 #=
   to maintain the package intent correctly
     some primitive operations must be taken with respect to Float32
 =#
-eps(x::Robust32) = eps(Float32(x))
-significand(x::Robust32) = significand(Float32(x))
-exponent(x::Robust32) = exponent(Float32(x))
-iszero(x::Robust32) = iszero(Float32(x))
-isone(x::Robust32) = isone(Float32(x))
-isfinite(x::Robust32) = isfinite(Float32(x))
-issubnormal(x::Robust32) = issubnormal(Float32(x))
-isinf(x::Robust32) = isinf(Float32(x))
-isnan(x::Robust32) = isnan(Float32(x))
+Base.eps(x::Robust32) = eps(value32(x))
+Base.significand(x::Robust32) = significand(value32(x))
+Base.exponent(x::Robust32) = exponent(value32(x))
+Base.sign(x::Robust32) = exponent(value32(x))
+Base.iszero(x::Robust32) = iszero(value32(x))
+Base.isone(x::Robust32) = isone(value32(x))
+Base.isfinite(x::Robust32) = isfinite(value32(x))
+Base.issubnormal(x::Robust32) = issubnormal(value32(x))
+Base.isinf(x::Robust32) = isinf(value64(x))
+Base.isnan(x::Robust32) = isnan(value64(x))
 
-signbit(x::Robust32) = signbit(value(x))
+Base.signbit(x::Robust32) = signbit(value32(x))
 
-zero(::Type{Robust32}) = Robust32(0.0)
-one(::Type{Robust32}) = Robust32(1.0)
-zero(x::Robust32) = zero(Robust32)
-one(x::Robust32) = one(Robust32)
+Base.zero(::Type{Robust32}) = Rob32(0.0)
+Base.one(::Type{Robust32}) = Rob32(1.0)
+Base.zero(x::Robust32) = zero(Robust32)
+Base.one(x::Robust32) = one(Robust32)
 
-frexp(x::Robust32) = frexp(Float32(x))
-
-for F in (:sign, :exponent, :significand)
-  @eval $F(x::Robust32) = $F(Float32(x))
-end
+Base.frexp(x::Robust32) = frexp(value32(x)) # ??????????? and ldexp
 
 for F in (:-, :abs, :sign, :inv, :sqrt, :cbrt)
-  @eval $F(x::Robust32) = Rob32($F(value64(x)))
+  @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
 end
 
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   @eval begin
-    $F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
-    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
-    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
+    Base.$F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
+    Base.$F(x::Robust32, y::Real) = $F(promote(x,y)...)
+    Base.$F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
 end
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign)
   @eval begin
-    $F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
-    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
-    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
+    Base.$F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
+    Base.$F(x::Robust32, y::Real) = $F(promote(x,y)...)
+    Base.$F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
 end
 
 for F in (:hypot, :clamp)
   @eval begin
-    $F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
-    $F(x::Robust32, y::Real, z::Real) = $F(promote(x,y,z)...)
-    $F(x::Real, y::Robust32, z::Real) = $F(promote(x,y,z)...)
-    $F(x::Real, y::Real, z::Robust32) = $F(promote(x,y,z)...)
+    Base.$F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
+    Base.$F(x::Robust32, y::Real, z::Real) = $F(promote(x,y,z)...)
+    Base.$F(x::Real, y::Robust32, z::Real) = $F(promote(x,y,z)...)
+    Base.$F(x::Real, y::Real, z::Robust32) = $F(promote(x,y,z)...)
   end  
 end
 
@@ -117,23 +116,23 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
           :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
           :sinpi, :tan, :tand, :tanh)
-    @eval $F(x::Robust32) = Rob32($F(value64(x)))
+    @eval Base.Math.$F(x::Robust32) = Rob32($F(value64(x)))
 end
 
 for F in (:modf, :sincos, :sincosd) # , :sincospi)
   @eval function $F(x::Robust32)
-            s, c = $F(value64(x))
+            s, c = Base.Math.$F(value64(x))
             return Rob32(s), Rob32(c)
          end
 end
 
-function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
+function Base.evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
     Rob32(evalpoly(value64(x), map(value64, p)))
 end
-function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
+function Base.evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
     Rob32(evalpoly(Float64(x), map(value64, p)))
 end
-function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
+function Base.evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
     Rob32(evalpoly(value64(x), p))
 end
 
