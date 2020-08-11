@@ -202,8 +202,11 @@ end
 LinearAlgebra.dot(x::Array{N,Robust32}) where {N} = Rob32(dot(reinterpret(Float64, x)))
 
 LinearAlgebra.adjoint(x::Matrix{Robust32}) = Adjoint(x)
-LinearAlgebra.transpose(x::Matrix{Robust32}) = Transpose(x)p
-                            
+LinearAlgebra.transpose(x::Matrix{Robust32}) = Transpose(x)
+
+# diag diagm diagind
+LinearAlgebra.diag(x::Matrix{Robust32}) = rewrap(diag(reinterpret(Float64, x)))
+                                
 LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(reinterpret(Float64,A); kw...))
 LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(reinterpret(Float64,A); kw...))
 LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(reinterpret(Float64,A)))
