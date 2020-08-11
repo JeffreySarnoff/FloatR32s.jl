@@ -1,3 +1,7 @@
+import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
+     tr, det, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
+     svdvals, svdvals!, svd, svd!, eigvals, eigvals!, eigen, eigen!
+
 for F in (:+, :-, :*, :/, :\)
   @eval begin
     $F(x::Vector{FloatR32}, y::Vector{FloatR32}) = reinterpret(FloatR32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
