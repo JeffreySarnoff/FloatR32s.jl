@@ -14,15 +14,19 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
                   # sincospi,
 
-# internal use only
-struct As64 end 
-
 struct Robust32 <: AbstractFloat
     val::Float64
-  
-    Robust32(x::Float64) = new(Float64(Float32(x)))
-    Robust32(::Type{As64}, x::Float64) = new(x)
 end
+
+Robust32(x::Float32) = Robust32(Float64(x))
+
+Base.convert(::Type{Robust32}, x::Float64) = Robust32(Float64(Float32(x))
+Base.convert(::Type{Robust32}, x::Float32) = Robust32(Float64(x))
+Base.promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
+Base.promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
+
+Base.Float64(x::Robust32) = Float64(Float32(x.val))
+Base.Float32(x::Robust32) = Float32(x.val)
 
 # internal use only
 Rob32(x::Float64) = Robust32(As64, x)
