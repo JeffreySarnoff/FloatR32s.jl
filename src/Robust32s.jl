@@ -18,6 +18,9 @@ Rob32(x::Float64) = Robust32(As64, x) # internal use only
 
 Robust32(x::Robust32) = x # idempotency
 
+Base.show(io::IO, x::Robust32) = print(io, value32(x))
+Base.string(x::Robust32) = string(value32(x))
+
 #=
   to maintain the package intent correctly
      explicit construction of T requires the target become a Float32
