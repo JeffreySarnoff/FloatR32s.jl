@@ -18,6 +18,9 @@ struct Robust32 <: AbstractFloat
     val::Float64
 end
 
+value(x::Robust32) = x.val
+value32(x::Robust32) = Float32(x.val)
+
 Robust32(x::Float32) = Robust32(Float64(x))
 
 Base.convert(::Type{Robust32}, x::Float64) = Robust32(Float64(Float32(x))
