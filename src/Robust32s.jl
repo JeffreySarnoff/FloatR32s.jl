@@ -38,11 +38,12 @@ const NaNR32 = Rob32(NaN)
 
 #=
   to maintain the package intent correctly
-     explicit construction of a Float64 requires the target become a Float32
-=#     
-Base.Float64(x::Robust32) = Float64(Float32(x.val))
-Base.Float32(x::Robust32) = Float32(x.val)
-Base.Float16(x::Robust32) = Float16(x.val)
+     explicit construction of T requires the target become a Float32
+=#
+Base.BigFloat(x::Robust32) = BigFloat(value32(x))
+Base.Float64(x::Robust32) = Float64(value32(x))
+Base.Float32(x::Robust32) = value32(x)
+Base.Float16(x::Robust32) = Float16(value32(x))
 
 for T in (:Float32, :Float16, :Signed, :Unsigned)
    @eval Robust32(x::$T) = Robust32(Float64(X))
