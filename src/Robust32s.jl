@@ -183,7 +183,7 @@ function Base.Array{N,Float64}(x::Array{N,Robust32}) where {N}
     return res
 end
 
-Base.Array{N,Robust32}(x::Array{N,Float64}) = Rob32.(x)
+Base.Array{N,Robust32}(x::Array{N,Float64}) where {N} = Rob32.(x)
 
 for F in (:tr, :det)
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(Matrix{Float64}(x))
