@@ -1,3 +1,11 @@
+#=
+  to maintain the package intent correctly
+     implicit construction of a Float64 does not require the target become a Float32
+
+  to maintain the package intent correctly
+    some primitive operations must be taken with respect to Float32
+=#
+
 module Robust32s
 
 export Robust32, ComplexR32
@@ -57,24 +65,6 @@ const Robust32_1 = Rob32(1.0)
 
 Robust32(x::Bool) = x ? Robust32_1 : Robust32_0
 
-#=
-  to maintain the package intent correctly
-     implicit construction of a Float64 does not require the target become a Float32
-=# 
-#=
-Base.convert(::Type{Robust32}, x::Float64) = Robust32(x)
-Base.convert(::Type{Robust32}, x::T) where {T<:Union{Float32, Float16}} = Robust32(x)
-Base.convert(::Type{Robust32}, x::T) where {T<:Signed} = Robust32(x)
-Base.convert(::Type{Robust32}, x::T) where {T<:Unsigned} = Robust32(x)
-
-Base.convert(::Type{Float64}, x::Robust32) = Float64(x)
-Base.convert(::Type{Float32}, x::Robust32) = Float32(x)
-=#
-
-#=
-  to maintain the package intent correctly
-    some primitive operations must be taken with respect to Float32
-=#
 Base.eps(x::Robust32) = eps(value32(x))
 Base.significand(x::Robust32) = significand(value32(x))
 Base.exponent(x::Robust32) = exponent(value32(x))
@@ -151,13 +141,6 @@ end
 function Base.evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
     Rob32(evalpoly(value64(x), p))
 end
-
-function Base.Vector{Float64}(x::Vector{Robust32}) = reinterpret(Float64, x)
-function Base.Vector{Robust32}(x::Vector{Float64}) = reinterpret(Robust32, x)
-function Base.Matrix{Float64}(x::Matrix{Robust32}) = reinterpret(Float64, x)
-function Base.Matrix{Robust32}(x::Matrix{Float64}) = reinterpret(Robust32, x)
-function Base.Array{Float64,N}(x::Array{Robust32,N}) where {N} = reinterpret(Float64, x)
-function Base.Array{Robust32,N}(x::Array{Float64,N}) where {N} = reinterpret(Robust32, x)
 
 rewrap(m::Vector{Float64}) =
     unsafe_wrap(Array{Robust32,1}, Ptr{Robust32}(pointer(m,1)), length(m))
