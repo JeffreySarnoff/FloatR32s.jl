@@ -185,6 +185,29 @@ end
 
 Base.Array{N,Robust32}(x::Array{N,Float64}) where {N} = Rob32.(x)
 
+function Base.:(*)(a::Array{Robust32,2}, b::Array{Robust32,2})
+    arows, acols = size(a)
+    brows, bcols = size(b)
+    if  acols != brows
+       throw(DimensionMismatch(string("size(a,1) != size(b,2): ",size(a,1), " != ", size(b,2))))
+    end
+
+    result_rows, result_cols = arows, bcols
+    result = reshape(Array{Float64, 1}(undef, result_rows*result_cols), (result_rows, result_cols))
+
+    for bcol = 1:bcols
+       for arow = 1:arows
+           asum = zero(Float64)
+           for acol = 1:acols
+               @inbounds asum = fma(a[arow,acol].val, b[acol,bcol].val, asum)
+           end
+           @inbounds result[arow,bcol] = asum
+       end
+    end
+
+    return Matrix{Robust32}(result)
+end
+
 for F in (:tr, :det)
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(Matrix{Float64}(x)))
 end
