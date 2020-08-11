@@ -20,6 +20,19 @@ module FloatR32s
 
 export FloatR32, ComplexR32
 
+import Base: ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
+             signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
+             min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
+             isfinite, issubnormal, isinf, isnan
+             
+import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
+                  asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
+                  csc, cscd, csch, deg2rad, evalpoly, exp, exp10, exp2, expm1,
+                  log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
+                  sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tanh
+                  # sincospi,
+
+
 using LinearAlgebra
 
 struct As64 end # internal use only
