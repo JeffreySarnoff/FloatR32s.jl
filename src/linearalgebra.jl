@@ -33,7 +33,7 @@ LinearAlgebra.dot(x::Array{FloatR32,N}, y::Array{FloatR32,N}) where {N} = Rob32(
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
-    @eval LinearAlgebra.$F(x::Matrix{FloatR32}) = reinterpret(FloatR32, $F(reinterpret(Float64, x)))
+    @eval LinearAlgebra.$F(x::Matrix{FloatR32}) = reinterpret(FloatR32, LinearAlgebra.$F(reinterpret(Float64, x)))
 end
 
 LinearAlgebra.adjoint(x::Matrix{FloatR32}) = Adjoint(x)
