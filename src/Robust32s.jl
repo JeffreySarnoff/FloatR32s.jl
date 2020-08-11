@@ -23,8 +23,8 @@ value32(x::Robust32) = Float32(x.val)
 
 Robust32(x::Float32) = Robust32(Float64(x))
 
-Base.convert(::Type{Robust32}, x::Float64) = Robust32(Float64(Float32(x))
-Base.convert(::Type{Robust32}, x::Float32) = Robust32(Float64(x))
+Base.convert(::Type{Robust32}, x::Float64) = Robust32(Float64(Float32(x)))
+Base.convert(::Type{Robust32}, x::Float32) = Robust32(Float64(x)))
 Base.promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
 Base.promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
 
