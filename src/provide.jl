@@ -24,6 +24,7 @@ const scalar_functions_of_one_arg = (
 # evalpoly
 
 const scalar_functions_of_two_args = (
+    flipsign, copysign,
     mod, rem, div, fld, cld, hypot,
 );
 
