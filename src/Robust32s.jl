@@ -120,6 +120,9 @@ Base.one(x::Robust32) = one(Robust32)
 
 Base.frexp(x::Robust32) = frexp(value32(x)) # ??????????? and ldexp
 
+include("provide.jl")
+
+#=
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
   @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
 end
@@ -164,6 +167,7 @@ for F in (:modf, :sincos, :sincosd) # , :sincospi)
             return Rob32(s), Rob32(c)
          end
 end
+=#
 
 # ?????? @evalpoly
 
@@ -176,24 +180,6 @@ end
 function Base.evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
     Rob32(evalpoly(value64(x), p))
 end
-
-rewrap(m::Vector{Float64}) =
-    unsafe_wrap(Array{Robust32,1}, Ptr{Robust32}(pointer(m,1)), length(m))
-rewrap(m::Vector{Robust32}) =
-    unsafe_wrap(Array{Float64,1}, Ptr{Float64}(pointer(m,1)), length(m))
-rewrap(m::Matrix{Float64}) =
-    unsafe_wrap(Array{Robust32,2}, Ptr{Robust32}(pointer(m,1)), size(m))
-rewrap(m::Matrix{Robust32}) =
-    unsafe_wrap(Array{Float64,2}, Ptr{Float64}(pointer(m,1)), size(m))
-
-rewrap(m::Vector{ComplexF64}) =
-    unsafe_wrap(Array{ComplexR32,1}, Ptr{ComplexR32}(pointer(m,1)), length(m))
-rewrap(m::Vector{ComplexR32}) =
-    unsafe_wrap(Array{ComplexF64,1}, Ptr{ComplexF64}(pointer(m,1)), length(m))
-rewrap(m::Matrix{ComplexF64}) =
-    unsafe_wrap(Array{ComplexR32,2}, Ptr{ComplexR32}(pointer(m,1)), size(m))
-rewrap(m::Matrix{ComplexR32}) =
-    unsafe_wrap(Array{ComplexF64,2}, Ptr{ComplexF64}(pointer(m,1)), size(m))
 
 include("linearalgebra.jl")
 
