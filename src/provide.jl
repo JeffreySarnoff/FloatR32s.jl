@@ -1,7 +1,8 @@
-
 #=
    functions to enfold:
    organized by applicable signature.
+
+   In these signature-based collections, the arguments to a given function share eltype.
 =#
 
 const scalar_functions_of_one_arg = map(Symbol, (
