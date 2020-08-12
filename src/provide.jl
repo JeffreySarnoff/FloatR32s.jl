@@ -23,8 +23,13 @@ const scalar_functions_of_one_arg = (
 # modf, sincos, sincospi, sincosd, return 2 
 # evalpoly
 
-const scalar_functions_of_two_args   = ()
-const scalar_functions_of_three_args = ()
+const scalar_functions_of_two_args = (
+    mod, rem, div, fld, cld, hypot,
+);
+
+const scalar_functions_of_three_args = (
+    clamp, hypot,
+);
 
 const vector_functions_of_one_arg  = ()
 const vector_functions_of_two_args = ()
