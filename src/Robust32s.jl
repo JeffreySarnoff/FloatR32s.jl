@@ -88,6 +88,12 @@ const Robust32_1 = Rob32(1.0)
 
 Robust32(x::Bool) = x ? Robust32_1 : Robust32_0
 
+Base.hash(x::Robust32, h::UInt64) = Base.hash(value64(x), h)
+
+Base.decompose(x::Robust32) = Base.decompose(value64(x))
+Base.precision(::Type{Robust32}) = Base.precision(Float32)
+Base.rtoldefault(x::Robust32) = Base.rtoldefault(Float32(x))
+
 Base.eps(x::Robust32) = eps(value32(x))
 Base.significand(x::Robust32) = significand(value32(x))
 Base.exponent(x::Robust32) = exponent(value32(x))
