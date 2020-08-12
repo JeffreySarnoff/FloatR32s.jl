@@ -4,17 +4,23 @@
    organized by applicable signature.
 =#
 
-const scalar_functions_of_one_arg = 
-    (abs2, acos, acosd, acosh, acot, acotd, acoth, 
-     acsc, acscd, acsch, asec, asecd, asech, 
-     asin, asind, asinh, atan, atand, atanh,
-     cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
-     csc, cscd, csch, deg2rad, evalpoly, exp, exp10, exp2, expm1,
-     log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi,
-     sec, secd, sech, sin, sinc, sind,
-     sinh, sinpi, tan, tand, tan)
+const scalar_functions_of_one_arg = (
+    abs, abs2,
+    deg2rad, rad2deg,
+    mod2pi, rem2pi,
+    sqrt, cbrt,
+    exp, exp10, exp2, expm1,
+    log, log10, log1p, log2,
+    sin, sinpi, cos, cospi, tan, csc, sec, cot,
+    asin, acos, atan, acsc, asec, acot,
+    sind, cosd, tand, cscd, secd, cotd,
+    asind, acosd, atand, acscd, asecd, acotd,
+    sinh, cosh, tanh, csch, sech, coth,
+    asinh, acosh, atanh, acsch, asech, acoth,
+);
 
-# sincos, sincospi, sincosd, return 2 
+# modf, sincos, sincospi, sincosd, return 2 
+# evalpoly
 
 const scalar_functions_of_two_args   = ()
 const scalar_functions_of_three_args = ()
