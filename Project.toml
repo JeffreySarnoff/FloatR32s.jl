@@ -2,7 +2,7 @@ name = "Robust32s"
 uuid = "fc794278-9573-4833-b162-b5ad0280e5d7"
 author = "Jeffrey Sarnoff"
 repo = "https://github.com/JeffreySarnoff/Robust32s.jl"
-keywords = ["Julia", "math", "floating-point", "accurate", "robust", "robust-numerics"]
+keywords = ["Julia", "math", "floating-point", "accurate", "robust", "numerics"]
 license = "MIT"
 version = "0.1.0"
 
