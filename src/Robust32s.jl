@@ -83,6 +83,10 @@ for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
   end
 end
 
+Base.convert(::Type{Rational{T}}, x::Robust32) where {T} = convert(Rational{T}, value32(x))
+Base.convert(::Type{Rational}, x::Robust32) = convert(Rational{Int64}, x)
+Base.promote_rule(::Type{Robust32}, ::Type{Rational}) = Robust32
+
 const Robust32_0 = Rob32(0.0)
 const Robust32_1 = Rob32(1.0)
 
