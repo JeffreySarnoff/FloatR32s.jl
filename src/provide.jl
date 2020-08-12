@@ -5,7 +5,8 @@
 =#
 
 const scalar_functions_of_one_arg = (
-    abs, abs2,
+    abs, (-), 
+    abs2, inv,
     deg2rad, rad2deg,
     mod2pi, rem2pi,
     sqrt, cbrt,
