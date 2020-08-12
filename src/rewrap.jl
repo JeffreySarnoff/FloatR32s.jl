@@ -22,7 +22,14 @@ provide(m::Matrix{Float64}) = reinterpret(Robust32, m)
 
 provide(m::Vector{Robust32}) = reinterpret(Float64, m)
 provide(m::Matrix{Robust32}) = reinterpret(Float64, m)
-    
+
+provide(m::Vector{ComplexF64}) = reinterpret(ComplexR32, m)
+provide(m::Matrix{ComplexF4})  = reinterpret(ComplexR32, m)
+
+provide(m::Vector{ComplexR32}) = reinterpret(ComplexF64, m)
+provide(m::Matrix{ComplexR32}) = reinterpret(ComplexF64, m)
+
+
 @inline ptr(::Type{T}, m::Array{T,N}) where {N,T} = convert(Ptr{T}, pointer(m,1))
 
 rewrap(m::Vector{Float64}) =
