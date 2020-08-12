@@ -78,17 +78,17 @@ import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issym
 
 for F in (:+, :-, :*, :/, :\)
   @eval begin
-    $F(x::Vector{Robust32}, y::Vector{Robust32}) = reinterpret(Robust32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
-    $F(x::Vector{Robust32}, y::Vector{Float64})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
-    $F(x::Vector{Float64}, y::Vector{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
-    $F(x::Vector{Robust32}, y::Vector{Float32})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
-    $F(x::Vector{Float32}, y::Vector{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
+    $F(x::Vector{Robust32}, y::Vector{Robust32}) = rewrap($F(rewrap(x), rewrap(y)))
+    $F(x::Vector{Robust32}, y::Vector{Float64})  = rewrap($F(rewrap(x), y))
+    $F(x::Vector{Float64}, y::Vector{Robust32})  = rewrap($F(x, rewrap(y)))
+    $F(x::Vector{Robust32}, y::Vector{Float32})  = rewrap($F(rewrap(x), y))
+    $F(x::Vector{Float32}, y::Vector{Robust32})  = rewrap($F(x, rewrap(y)))
 
-    $F(x::Matrix{Robust32}, y::Matrix{Robust32}) = reinterpret(Robust32)($F(reinterpret(Float64, x), reinterpret(Float64, y)))
-    $F(x::Matrix{Robust32}, y::Matrix{Float64})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
-    $F(x::Matrix{Float64}, y::Matrix{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
-    $F(x::Matrix{Robust32}, y::Matrix{Float32})  = reinterpret(Robust32)($F(reinterpret(Float64, x), y))
-    $F(x::Matrix{Float32}, y::Matrix{Robust32}) = reinterpret(Robust32)($F(x, reinterpret(Float64, y)))
+    $F(x::Matrix{Robust32}, y::Matrix{Robust32}) = rewrap($F(rewrap(x), rewrap(y)))
+    $F(x::Matrix{Robust32}, y::Matrix{Float64})  = rewrap($F(rewrap(x), y))
+    $F(x::Matrix{Float64}, y::Matrix{Robust32})  = rewrap($F(x, rewrap(y)))
+    $F(x::Matrix{Robust32}, y::Matrix{Float32})  = rewrap($F(rewrap(x), y))
+    $F(x::Matrix{Float32}, y::Matrix{Robust32})  = rewrap($F(x, rewrap(y)))
   end
 end
 
@@ -97,7 +97,7 @@ for F in (:tr, :det)
 end
 
 for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric, :istril, :istriu)
-  @eval LinearAlgebra.$F(x::Matrix{Robust32}) = $F(reinterpret(Float64, x))
+  @eval LinearAlgebra.$F(x::Matrix{Robust32}) = $F(rewrap(x))
 end
 
 LinearAlgebra.dot(x::Array{Robust32,N}, y::Array{Robust32,N}) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
@@ -106,7 +106,7 @@ LinearAlgebra.cross(x::Array{Robust32,1}, y::Array{Robust32,1}) where {N} = rewr
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = reinterpret(Robust32, LinearAlgebra.$F(reinterpret(Float64, x)))
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = reinterpret(Robust32, LinearAlgebra.$F(rewrap(x)))
 end
 
 LinearAlgebra.adjoint(x::Matrix{Robust32}) = Adjoint(x)
