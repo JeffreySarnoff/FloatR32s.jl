@@ -29,5 +29,5 @@ for (R,F) in ((:Robust32, :Float64), (:ComplexR32, :ComplexF64))
   end
 end
 
-@inline cvtptr(::Type{T}, m::Array{T,N}) where {N,T} =
+@inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
