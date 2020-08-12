@@ -4,7 +4,7 @@
    organized by applicable signature.
 =#
 
-const scalar_functions_of_one_arg = (
+const scalar_functions_of_one_arg = map(Symbol, (
     abs, (-), 
     abs2, inv,
     deg2rad, rad2deg,
@@ -19,19 +19,19 @@ const scalar_functions_of_one_arg = (
     asind, acosd, atand, acscd, asecd, acotd,
     sinh, cosh, tanh, csch, sech, coth,
     asinh, acosh, atanh, acsch, asech, acoth,
-);
+));
 
 # modf, sincos, sincospi, sincosd, return 2 
 # evalpoly
 
-const scalar_functions_of_two_args = (
+const scalar_functions_of_two_args = map(Symbol, (
     flipsign, copysign,
     mod, rem, div, fld, cld, hypot,
-);
+));
 
-const scalar_functions_of_three_args = (
+const scalar_functions_of_three_args = map(Symbol, (
     clamp, hypot,
-);
+));
 
 const vector_functions_of_one_arg  = ()
 const vector_functions_of_two_args = ()
