@@ -93,7 +93,7 @@ for F in (:+, :-, :*, :/, :\)
 end
 
 for F in (:tr, :det)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(reinterpret(Float64, x)))
+    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(rewrap(x)))
 end
 
 for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric, :istril, :istriu)
