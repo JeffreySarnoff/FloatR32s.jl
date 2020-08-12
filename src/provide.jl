@@ -1,3 +1,28 @@
+
+#=
+   functions to enfold:
+   organized by applicable signature.
+=#
+
+const scalar_functions_of_one_arg    = ()
+const scalar_functions_of_two_args   = ()
+const scalar_functions_of_three_args = ()
+
+const vector_functions_of_one_arg  = ()
+const vector_functions_of_two_args = ()
+
+const vector_adjoint_functions_of_two_args = ()
+const adjoint_vector_functions_of_two_args = ()
+
+const matrix_vector_functions_of_two_args = ()
+const vector_matrix_functions_of_two_args = ()
+
+const matrix_functions_of_one_arg  = ()
+const matrix_functions_of_two_args = ()
+
+const matrix_adjoint_functions_of_two_args = ()
+const adjoint_matrix_functions_of_two_args = ()
+
 #=     
      provide(x) uses reinterpret
      
@@ -69,6 +94,10 @@ end
 
 for F in matrix_vector_functions_of_two_args
   @eval enfold($F, x::Matrix{Robust32}, y::Vector{Robust32}) = provide(fn(provide(x), provide(y)))
+end
+
+for F in vector_matrix_functions_of_two_args
+  @eval enfold($F, x::Vector{Robust32}, y::Matrix{Robust32}) = provide(fn(provide(x), provide(y)))
 end
 
 for F in matrix_adjoint_functions_of_two_args
