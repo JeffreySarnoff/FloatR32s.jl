@@ -1,4 +1,4 @@
-# FloatR32s
+# Robust32s
 
 A more robust Float32 that preserves `float` performance.
 
@@ -17,14 +17,14 @@ A more robust Float32 that preserves `float` performance.
  
  ### exports
  
- - `FloatR32` a robust 32bit floating point type
- - `ComplexR32` a robust 32bit complex floating point type
+ - `Robust32`   a robust 32bit floating point type
+ - `ComplexR32` a robust 32bit complex floating point type (named like `ComplexF32`)
  
  ### installation
  
  ```julia
  julia> using Pkg
- julia> Pkg.add("FloatR32s")
+ julia> Pkg.add("Robust32s")
  ```
  
 ## Basic Examples
@@ -38,7 +38,7 @@ julia> a, b = sqrt.(Float32.((2.0, 0.5)))
 julia> c = a * b    # product of Float32s
 0.99999994f0
 
-julia> a, b = sqrt.(FloatR32.((2.0, 0.5)))
+julia> a, b = sqrt.(Robust32.((2.0, 0.5)))
 (1.4142135f0, 0.70710677f0)
 
 julia> c = a * b    # product of FloatR32s
