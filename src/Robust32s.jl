@@ -23,7 +23,7 @@ export Robust32, ComplexR32
 import Base: ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
              signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
-             isfinite, issubnormal, isinf, isnan
+             isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin
              
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
@@ -97,6 +97,10 @@ Base.hash(x::Robust32, h::UInt64) = Base.hash(value32(x), h)
 Base.decompose(x::Robust32) = Base.decompose(value32(x))
 Base.precision(::Type{Robust32}) = Base.precision(Float32)
 Base.rtoldefault(x::Robust32) = Base.rtoldefault(Float32(x))
+
+for F in (:floatmin, :floatmax, :maxintfloat, :typemax, :typemin)
+  @eval $F(::Type{Robust32}) = Robust32($F(Float32))
+end
 
 Base.eps(x::Robust32) = eps(value32(x))
 Base.significand(x::Robust32) = significand(value32(x))
