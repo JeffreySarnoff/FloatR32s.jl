@@ -34,6 +34,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincospi, sincosd, sind, sinh, sinpi, tan, tand, tan
 
 using LinearAlgebra
+using Gaius
 
 struct As64 end # internal use only
 
@@ -202,6 +203,10 @@ end
 
 @inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
+
+Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b))
+LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
+
 
 Base.frexp(x::Robust32) = frexp(value32(x)) # ??????????? and ldexp
 
