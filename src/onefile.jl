@@ -415,6 +415,7 @@ for F in (:+, :-, :*, :/, :\)
   end
 end
 
+#=
 for F in (:tr, :det)
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(rewrap(x)))
 end
@@ -431,7 +432,8 @@ for F in (:inv, :sqrt, :exp, :log,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
     @eval LinearAlgebra.$F(x::Matrix{Robust32}) = reinterpret(Robust32, LinearAlgebra.$F(rewrap(x)))
 end
-
+=#
+#=
 LinearAlgebra.adjoint(x::Matrix{Robust32}) = Adjoint(x)
 LinearAlgebra.transpose(x::Matrix{Robust32}) = Transpose(x)
 
@@ -442,7 +444,8 @@ LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(rewrap(A); kw
 LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(rewrap(A); kw...))
 LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(rewrap(A)))
 LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(rewrap(A)))
-
+=#
+#=
 function LinearAlgebra.svd(x::Matrix{Robust32})
     u, s, v = svd(rewrap(x))
     U = rewrap(u)
@@ -516,7 +519,7 @@ function LinearAlgebra.lmul!(x::AbstractMatrix{Robust32}, y::AbstractVector{Robu
    res = lmul!(xx, yy)
    return rewrap(res)
 end
-
+=#
    
 #=
 
