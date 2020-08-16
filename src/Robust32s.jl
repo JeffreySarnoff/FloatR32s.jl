@@ -20,7 +20,9 @@ module Robust32s
 
 export Robust32, ComplexR32
 
-import Base: ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
+import Base: convert, promote_rule, show, string,
+             Float64, Float32,
+             ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
              signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
              isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin
@@ -42,27 +44,33 @@ struct Robust32 <: AbstractFloat
     Robust32(::Type{As64}, x::Float64) = new(x)
 end
 
-value64(x::Robust32) = x.val
-value32(x::Robust32) = Float32(x.val)
-
-# internal use only
-Rob32(x::Float64) = Robust32(As64, x)
-
 Robust32(x::Robust32) = x # idempotency
 
-Base.show(io::IO, x::Robust32) = show(io, value32(x))
-Base.string(x::Robust32) = string(value32(x))
+value64(x::Robust32) = x.val
+value32(x::Robust32) = Float32(x.val)
 
 const ComplexR32 = Complex{Robust32}
 
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
 
-Base.Float64(x::Robust32) = Float64(value32(x))
-Base.convert(::Type{Float64}, x::Robust32) = Float64(x)
-Base.promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
+# internal use only
+Rob32(x::Float64) = Robust32(As64, x)
 
-for T in (:BigFloat, :Float32, :Float16)
+Float64(x::Robust32) = Float64(value32(x))
+convert(::Type{Float64}, x::Robust32) = Float64(x)
+promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
+# Robust32(x::Float64) defined as an internal constructor
+
+Float32(x::Robust32) = value32(x)
+convert(::Type{Float32}, x::Robust32) = Float32(x)
+promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
+Robust32(x::Float32) = Rob32(Float64(x))
+
+show(io::IO, x::Robust32) = show(io, value32(x))
+string(x::Robust32) = string(value32(x))
+
+for T in (:BigFloat, :Float16)
   @eval begin
     Base.$T(x::Robust32) = $T(value32(x))
     Robust32(x::$T) = Rob32(Float64(Float32(x)))
