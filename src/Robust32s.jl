@@ -126,11 +126,6 @@ Base.one(::Type{Robust32}) = Robust32_1
 Base.zero(x::Robust32) = zero(Robust32)
 Base.one(x::Robust32) = one(Robust32)
 
-Base.frexp(x::Robust32) = frexp(value32(x)) # ??????????? and ldexp
-
-include("provide.jl")
-
-#=
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
   @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
 end
@@ -169,12 +164,21 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
     @eval Base.Math.$F(x::Robust32) = Rob32($F(value64(x)))
 end
 
+Base.Math.atan(x::Robust32, y::Robust32) = Rob32(atan(value64(x), value64(y)))
+
 for F in (:modf, :sincos, :sincosd) # , :sincospi)
   @eval function $F(x::Robust32)
             s, c = Base.Math.$F(value64(x))
             return Rob32(s), Rob32(c)
          end
 end
+
+
+Base.frexp(x::Robust32) = frexp(value32(x)) # ??????????? and ldexp
+
+include("provide.jl")
+
+#=
 =#
 
 # ?????? @evalpoly
