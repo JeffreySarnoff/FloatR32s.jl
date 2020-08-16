@@ -43,7 +43,10 @@ const adjoint_vector_functions_of_two_args = ()
 const matrix_vector_functions_of_two_args = ()
 const vector_matrix_functions_of_two_args = ()
 
-const matrix_functions_of_one_arg  = ()
+const matrix_functions_of_one_arg  = (
+   cond, det, tr, adjoint, transpose,
+   eigvals, svdvals, eigvecs,
+);
 const matrix_functions_of_two_args = ()
 
 const matrix_adjoint_functions_of_two_args = ()
