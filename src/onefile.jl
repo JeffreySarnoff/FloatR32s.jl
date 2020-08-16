@@ -31,7 +31,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
                   sin, sinc, sincos, sincospi, sincosd, sind, sinh, sinpi, tan, tand, tan
 
-import LinearAlgebra
+import LinearAlgebra: tr, det, transpose, transpose!, adjoint, adjoint!, cond
 using LinearAlgebra
 
 struct As64 end # internal use only
