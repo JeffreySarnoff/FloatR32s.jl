@@ -1,0 +1,21 @@
+name = "Robust32s"
+uuid = "fc794278-9573-4833-b162-b5ad0280e5d7"
+author = "Jeffrey Sarnoff"
+repo = "https://github.com/JeffreySarnoff/Robust32s.jl"
+keywords = ["Julia", "math", "floating-point", "accurate", "robust", "numerics"]
+license = "MIT"
+version = "0.1.0"
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
+
+[compat]
+SpecialFunctions = "0"
+julia = "^1.5"
