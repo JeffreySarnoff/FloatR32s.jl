@@ -32,7 +32,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
                   csc, cscd, csch, deg2rad, evalpoly, exp, exp10, exp2, expm1,
                   log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
-                  sin, sinc, sincos, sincospi, sincosd, sind, sinh, sinpi, tan, tand, tan
+                  sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tan #  sincospi
 
 using LinearAlgebra
 using Gaius
