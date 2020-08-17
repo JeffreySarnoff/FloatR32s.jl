@@ -1,7 +1,11 @@
 using Documenter, Robust32s
 
-makedocs()
-
+makedocs(
+    pages  = Any[
+        "Overview" => "index.md",
+    ]   
+)
+        
 deploydocs(
-    repo = "github.com/USER_NAME/PACKAGE_NAME.jl.git",
+    repo = "github.com/JeffreySarnoff/Robust32s.jl.git",
 )
