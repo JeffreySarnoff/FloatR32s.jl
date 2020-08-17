@@ -222,27 +222,9 @@ end
 @inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
 
-Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b))
-LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
-
-#=  
-include("provide.jl")
-
-
-# ?????? @evalpoly
-
-function Base.evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
-    Rob32(evalpoly(value64(x), map(value64, p)))
-end
-function Base.evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
-    Rob32(evalpoly(Float64(x), map(value64, p)))
-end
-function Base.evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
-    Rob32(evalpoly(value64(x), p))
-end
-
 include("linearalgebra.jl")
 
-=#
+Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b))
+LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
   
 end  # Robust32s
