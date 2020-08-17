@@ -349,5 +349,11 @@ function lmul!(x::AbstractMatrix{Robust32}, y::AbstractVector{Robust32})
    res = lmul!(xx, yy)
    return rewrap(res)
 end
+  
+# random numbers                                   <<<<<<<<<< change to canonical rng
+
+Base.rand(::Type{Robust32}) = Rob32(Float64(rand(Float32)))
+Base.rand(::Type{Robust32}, n::Int) = Rob32.(Float64.(rand(Float32, n)))
+Base.rand(::Type{Robust32}, n1::Int, n2::Int) = Rob32.(Float64.(rand(Float32, n1, n2)))
 
 end  # Robust32s
