@@ -35,7 +35,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tan #  sincospi
 
 using LinearAlgebra
-using Gaius
+# using Gaius
 
 struct As64 end # internal use only
 
