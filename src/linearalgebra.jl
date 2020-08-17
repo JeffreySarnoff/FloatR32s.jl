@@ -71,11 +71,15 @@ julia> listnames(:symmetric)
   circul   dingdong hankel  invhilb lehmer moler pascal    poisson randcorr wathen
 
 =#
+
 import LinearAlgebra
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
      tr, det, dot, cross, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
      svdvals, svdvals!, svd, svd!, eigvals, eigvals!, eigvecs, eigen, eigen!
 
+Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b)))
+LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
+  
 for F in (:+, :-, :*, :/, :\)
   @eval begin
     $F(x::Vector{Robust32}, y::Vector{Robust32}) = rewrap($F(rewrap(x), rewrap(y)))
@@ -193,17 +197,3 @@ function lmul!(x::AbstractMatrix{Robust32}, y::AbstractVector{Robust32})
    res = lmul!(xx, yy)
    return rewrap(res)
 end
-
-   
-#=
-
-lmul!(::LinearAlgebra.LQPackedQ{Robust32,Matrix{Robust32}}, ::Vector{Robust32})
-
-function LinearAlgebra.lq(x::Matrix{Robust32})
-   xx = rewrap(x)
-   res = lq(xx)
-   yy = rewrap(res.factors)
-   tt = rewrap(res.τ)
-   return LQ{Robust32, Matrix{Robust32}}(yy, tt)
-end
-=#
