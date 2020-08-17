@@ -85,14 +85,14 @@ for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
   @eval begin
     Base.$T(x::Robust32) = $T(value32(x))
     Robust32(x::$T) = Rob32(Float64(Float32(x)))
-    Base.convert(::Type{$T}, x::Robust32) = $T(x)
-    Base.promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
+    convert(::Type{$T}, x::Robust32) = $T(x)
+    promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
   end
 end
 
-Base.convert(::Type{Rational{T}}, x::Robust32) where {T} = convert(Rational{T}, value32(x))
-Base.convert(::Type{Rational}, x::Robust32) = convert(Rational{Int64}, x)
-Base.promote_rule(::Type{Robust32}, ::Type{Rational}) = Robust32
+convert(::Type{Rational{T}}, x::Robust32) where {T} = convert(Rational{T}, value32(x))
+convert(::Type{Rational}, x::Robust32) = convert(Rational{Int64}, x)
+promote_rule(::Type{Robust32}, ::Type{Rational}) = Robust32
 
 const Robust32_0 = Rob32(0.0)
 const Robust32_1 = Rob32(1.0)
@@ -109,16 +109,16 @@ for F in (:floatmin, :floatmax, :maxintfloat, :typemax, :typemin)
   @eval $F(::Type{Robust32}) = Robust32($F(Float32))
 end
 
-Base.eps(x::Robust32) = eps(value32(x))
-Base.significand(x::Robust32) = significand(value32(x))
-Base.exponent(x::Robust32) = exponent(value32(x))
-Base.sign(x::Robust32) = exponent(value32(x))
-Base.iszero(x::Robust32) = iszero(value32(x))
-Base.isone(x::Robust32) = isone(value32(x))
-Base.isfinite(x::Robust32) = isfinite(value32(x))
-Base.issubnormal(x::Robust32) = issubnormal(value32(x))
-Base.isinf(x::Robust32) = isinf(value64(x))
-Base.isnan(x::Robust32) = isnan(value64(x))
+eps(x::Robust32) = eps(value32(x))
+significand(x::Robust32) = significand(value32(x))
+exponent(x::Robust32) = exponent(value32(x))
+sign(x::Robust32) = exponent(value32(x))
+iszero(x::Robust32) = iszero(value32(x))
+isone(x::Robust32) = isone(value32(x))
+isfinite(x::Robust32) = isfinite(value32(x))
+issubnormal(x::Robust32) = issubnormal(value32(x))
+isinf(x::Robust32) = isinf(value64(x))
+isnan(x::Robust32) = isnan(value64(x))
 
 Base.signbit(x::Robust32) = signbit(value32(x))
 
@@ -204,12 +204,15 @@ end
 @inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
 
+Broadcast.broadcastable(x::Robust32) = Ref(x)
+
 Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b))
 LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
 
 
-Base.frexp(x::Robust32) = frexp(value32(x)) # ??????????? and ldexp
-
+frexp(x::Robust32) = frexp(value32(x))
+ldexp(fr::Float32, ex::Int) = Rob32(ldexp(Float64(fr), ex))
+  
 include("provide.jl")
 
 #=
