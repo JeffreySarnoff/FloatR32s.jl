@@ -224,6 +224,7 @@ end
 
 # include("linearalgebra.jl")
 
+import LinearAlgebra
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
      tr, det, dot, cross, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
      svdvals, svdvals!, svd, svd!, eigvals, eigvals!, eigvecs, eigen, eigen!
