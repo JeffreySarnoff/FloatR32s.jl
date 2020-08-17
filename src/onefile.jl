@@ -229,7 +229,7 @@ import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issym
      tr, det, dot, cross, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
      svdvals, svdvals!, svd, svd!, eigvals, eigvals!, eigvecs, eigen, eigen!
 
-Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b))))
+Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b)))
 LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
   
 for F in (:+, :-, :*, :/, :\)
