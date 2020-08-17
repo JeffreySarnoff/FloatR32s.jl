@@ -23,9 +23,10 @@ export Robust32, ComplexR32
 import Base: convert, promote_rule, show, string,
              Float64, Float32,
              ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
-             signbit, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
+             signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
-             isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin
+             isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin,
+             evalpoly
              
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
@@ -96,14 +97,16 @@ promote_rule(::Type{Robust32}, ::Type{Rational}) = Robust32
 
 const Robust32_0 = Rob32(0.0)
 const Robust32_1 = Rob32(1.0)
+const Robust32_2 = Rob32(2.0)
 
 Robust32(x::Bool) = x ? Robust32_1 : Robust32_0
 
 Base.hash(x::Robust32, h::UInt64) = Base.hash(value32(x), h)
 
 Base.decompose(x::Robust32) = Base.decompose(value32(x))
-Base.precision(::Type{Robust32}) = Base.precision(Float32)
 Base.rtoldefault(x::Robust32) = Base.rtoldefault(Float32(x))
+
+precision(::Type{Robust32}) = precision(Float32)
 
 for F in (:floatmin, :floatmax, :maxintfloat, :typemax, :typemin)
   @eval $F(::Type{Robust32}) = Robust32($F(Float32))
@@ -120,12 +123,17 @@ issubnormal(x::Robust32) = issubnormal(value32(x))
 isinf(x::Robust32) = isinf(value64(x))
 isnan(x::Robust32) = isnan(value64(x))
 
-Base.signbit(x::Robust32) = signbit(value32(x))
+signbit(x::Robust32) = signbit(value32(x))
 
-Base.zero(::Type{Robust32}) = Robust32_0
-Base.one(::Type{Robust32}) = Robust32_1
-Base.zero(x::Robust32) = zero(Robust32)
-Base.one(x::Robust32) = one(Robust32)
+zero(::Type{Robust32}) = Robust32_0
+one(::Type{Robust32}) = Robust32_1
+two(::Type{Robust32}) = Robust32_2
+zero(x::Robust32) = zero(Robust32)
+one(x::Robust32) = one(Robust32)
+two(x::Robust32) = two(Robust32)
+
+frexp(x::Robust32) = frexp(value32(x))
+ldexp(fr::Float32, ex::Int) = Rob32(ldexp(Float64(fr), ex))
 
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
   @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
@@ -174,6 +182,16 @@ for F in (:modf, :sincos, :sincosd) # , :sincospi)
          end
 end
 
+function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
+    Rob32(evalpoly(value64(x), map(value64, p)))
+end
+function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
+    Rob32(evalpoly(Float64(x), map(value64, p)))
+end
+function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
+    Rob32(evalpoly(value64(x), p))
+end
+
 #=     
      provide(x) uses reinterpret
      
@@ -204,19 +222,12 @@ end
 @inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
 
-Broadcast.broadcastable(x::Robust32) = Ref(x)
-
 Gaius.blocked_mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = rewrap(blocked_mul!(rewrap(c), rewrap(a), rewrap(b))
 LinearAlgebra.mul!(c::Matrix{Robust32}, a::Matrix{Robust32}, b::Matrix{Robust32}) = blocked_mul!(c, a, b)
 
-
-frexp(x::Robust32) = frexp(value32(x))
-ldexp(fr::Float32, ex::Int) = Rob32(ldexp(Float64(fr), ex))
-  
+#=  
 include("provide.jl")
 
-#=
-=#
 
 # ?????? @evalpoly
 
@@ -232,4 +243,6 @@ end
 
 include("linearalgebra.jl")
 
+=#
+  
 end  # Robust32s
