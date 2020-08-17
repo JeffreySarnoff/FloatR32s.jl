@@ -1,77 +1,3 @@
-#=
-[  "/", "\\", 
-   # "adjoint", "adjoint!", 
-   "axpby!", "axpy!", "bunchkaufman", "bunchkaufman!", "cholesky", "cholesky!", "cond", "condskeel", 
-   "copy_transpose!", "copyto!",
-   # "cross", 
-   # "det", "diag", 
-   "diagind", "diagm", 
-   # "dot", 
-   # "eigen", "eigen!", 
-   "eigmax", "eigmin", 
-   # "eigvals", "eigvals!", 
-    "eigvecs", 
-   "factorize", "givens", "hessenberg", "hessenberg!", 
-   # "isdiag", "ishermitian", "isposdef", "isposdef!", "issuccess", "issymmetric", "istril", "istriu", 
-   "kron", "ldiv!", "ldlt", "ldlt!", "lmul!", "logabsdet", "logdet", 
-   "lowrankdowndate", "lowrankdowndate!", "lowrankupdate", "lowrankupdate!", 
-   "lq", "lq!", 
-   # "lu", "lu!", 
-   "lyap", 
-   "mul!", "norm", "normalize", "normalize!", "nullspace", "opnorm", 
-   "ordschur", "ordschur!", "pinv", "qr", "qr!", 
-   "rank", "rdiv!", "reflect!", "rmul!", "rotate!", "schur", "schur!", 
-   # "svd", "svd!", "svdvals", "svdvals!", 
-   "sylvester", 
-   # "tr", "transpose", "transpose!", 
-   "tril", "tril!", "triu", "triu!", "×", "⋅" ]
-
-   (:UnitUpperTriangular, :UnitLowerTriangular, :UpperHessenberg, :LowerHessenbert, :UpperTriangular, :LowerTriangular, :Tridiagonal, :SymTridiagonal, :Symmetric)
-
-   ["Adjoint", "BLAS", "Bidiagonal", "BunchKaufman", "Cholesky", "CholeskyPivoted", 
-    "Diagonal", "Eigen", "Factorization", "GeneralizedEigen", "GeneralizedSVD", "GeneralizedSchur", 
-    "Hermitian", "Hessenberg", "I", "LAPACK", "LAPACKException", "LDLt", "LQ", "LU", 
-    "LowerTriangular", "QR", "QRPivoted", "SVD", 
-    "Schur", "SymTridiagonal", "Symmetric", "Transpose", "Tridiagonal", 
-    "UniformScaling", "UnitLowerTriangular", "UnitUpperTriangular", "UpperHessenberg", "UpperTriangular"]
-
-
-julia> listnames(:eigen)
-  list(23)
-  –––––––– ––––––– –––––––– –––––––– –––––––– –––––– ––––––– ––––––––– ––––––– –––––––– ––––––– –––––––––
-  chebspec circul  dingdong forsythe grcar    invol  minij   oscillate pascal  rosser   tridiag wilkinson
-  chow     clement fiedler  frank    hadamard lotkin neumann parter    poisson sampling wathen
-
-julia> listnames(:graph)
-  list(3)
-  ––––––– ––––––– ––––––––––
-  erdrey  gilbert smallworld
-
-julia> listnames(:illcond)
-  list(20)
-  –––––––– ––––– ––––––– ––––– –––––– ––––––––– –––––– ––––––– ––––––– ––––
-  cauchy   frank hilb    invol kms    moler     pascal prolate rosser  triw
-  forsythe golub invhilb kahan lotkin oscillate pei    randsvd tridiag vand
-
-julia> listnames(:inverse)
-  list(21)
-  –––––––– –––––––– –––––––– ––––––– ––––– –––––– ––––– –––––– ––––––– ––––––– ––––
-  cauchy   fiedler  hadamard invhilb kahan lehmer magic moler  pei     tridiag vand
-  clement  forsythe hilb     invol   kms   lotkin minij pascal poisson triw
-
-julia> listnames(:posdef)
-  list(14)
-  –––––––– –––––– –––– ––––––– ––– –––––– ––––– ––––– ––––––––– –––––– ––– ––––––– ––––––– ––––––
-  cauchy   circul hilb invhilb kms lehmer minij moler oscillate pascal pei poisson tridiag wathen
-
-julia> listnames(:symmetric)
-  list(21)
-  –––––––– –––––––– ––––––– ––––––– –––––– ––––– ––––––––– ––––––– –––––––– ––––––– –––––––––
-  cauchy   clement  fiedler hilb    kms    minij oscillate pei     prolate  tridiag wilkinson
-  circul   dingdong hankel  invhilb lehmer moler pascal    poisson randcorr wathen
-
-=#
-
 import LinearAlgebra
 import LinearAlgebra: isdiag, ishermitian, isposdef, isposdef!, issuccess, issymmetric, istril, istriu,
      tr, det, dot, cross, adjoint, adjoint!, transpose, transpose!, diag, diagm, diagind, 
@@ -197,3 +123,78 @@ function lmul!(x::AbstractMatrix{Robust32}, y::AbstractVector{Robust32})
    res = lmul!(xx, yy)
    return rewrap(res)
 end
+
+#=
+[  "/", "\\", 
+   # "adjoint", "adjoint!", 
+   "axpby!", "axpy!", "bunchkaufman", "bunchkaufman!", "cholesky", "cholesky!", "cond", "condskeel", 
+   "copy_transpose!", "copyto!",
+   # "cross", 
+   # "det", "diag", 
+   "diagind", "diagm", 
+   # "dot", 
+   # "eigen", "eigen!", 
+   "eigmax", "eigmin", 
+   # "eigvals", "eigvals!", 
+    "eigvecs", 
+   "factorize", "givens", "hessenberg", "hessenberg!", 
+   # "isdiag", "ishermitian", "isposdef", "isposdef!", "issuccess", "issymmetric", "istril", "istriu", 
+   "kron", "ldiv!", "ldlt", "ldlt!", "lmul!", "logabsdet", "logdet", 
+   "lowrankdowndate", "lowrankdowndate!", "lowrankupdate", "lowrankupdate!", 
+   "lq", "lq!", 
+   # "lu", "lu!", 
+   "lyap", 
+   "mul!", "norm", "normalize", "normalize!", "nullspace", "opnorm", 
+   "ordschur", "ordschur!", "pinv", "qr", "qr!", 
+   "rank", "rdiv!", "reflect!", "rmul!", "rotate!", "schur", "schur!", 
+   # "svd", "svd!", "svdvals", "svdvals!", 
+   "sylvester", 
+   # "tr", "transpose", "transpose!", 
+   "tril", "tril!", "triu", "triu!", "×", "⋅" ]
+
+   (:UnitUpperTriangular, :UnitLowerTriangular, :UpperHessenberg, :LowerHessenbert, :UpperTriangular, :LowerTriangular, :Tridiagonal, :SymTridiagonal, :Symmetric)
+
+   ["Adjoint", "BLAS", "Bidiagonal", "BunchKaufman", "Cholesky", "CholeskyPivoted", 
+    "Diagonal", "Eigen", "Factorization", "GeneralizedEigen", "GeneralizedSVD", "GeneralizedSchur", 
+    "Hermitian", "Hessenberg", "I", "LAPACK", "LAPACKException", "LDLt", "LQ", "LU", 
+    "LowerTriangular", "QR", "QRPivoted", "SVD", 
+    "Schur", "SymTridiagonal", "Symmetric", "Transpose", "Tridiagonal", 
+    "UniformScaling", "UnitLowerTriangular", "UnitUpperTriangular", "UpperHessenberg", "UpperTriangular"]
+
+
+julia> listnames(:eigen)
+  list(23)
+  –––––––– ––––––– –––––––– –––––––– –––––––– –––––– ––––––– ––––––––– ––––––– –––––––– ––––––– –––––––––
+  chebspec circul  dingdong forsythe grcar    invol  minij   oscillate pascal  rosser   tridiag wilkinson
+  chow     clement fiedler  frank    hadamard lotkin neumann parter    poisson sampling wathen
+
+julia> listnames(:graph)
+  list(3)
+  ––––––– ––––––– ––––––––––
+  erdrey  gilbert smallworld
+
+julia> listnames(:illcond)
+  list(20)
+  –––––––– ––––– ––––––– ––––– –––––– ––––––––– –––––– ––––––– ––––––– ––––
+  cauchy   frank hilb    invol kms    moler     pascal prolate rosser  triw
+  forsythe golub invhilb kahan lotkin oscillate pei    randsvd tridiag vand
+
+julia> listnames(:inverse)
+  list(21)
+  –––––––– –––––––– –––––––– ––––––– ––––– –––––– ––––– –––––– ––––––– ––––––– ––––
+  cauchy   fiedler  hadamard invhilb kahan lehmer magic moler  pei     tridiag vand
+  clement  forsythe hilb     invol   kms   lotkin minij pascal poisson triw
+
+julia> listnames(:posdef)
+  list(14)
+  –––––––– –––––– –––– ––––––– ––– –––––– ––––– ––––– ––––––––– –––––– ––– ––––––– ––––––– ––––––
+  cauchy   circul hilb invhilb kms lehmer minij moler oscillate pascal pei poisson tridiag wathen
+
+julia> listnames(:symmetric)
+  list(21)
+  –––––––– –––––––– ––––––– ––––––– –––––– ––––– ––––––––– ––––––– –––––––– ––––––– –––––––––
+  cauchy   clement  fiedler hilb    kms    minij oscillate pei     prolate  tridiag wilkinson
+  circul   dingdong hankel  invhilb lehmer moler pascal    poisson randcorr wathen
+
+=#
+
