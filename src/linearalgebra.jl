@@ -93,34 +93,34 @@ for F in (:+, :-, :*, :/, :\)
 end
 
 for F in (:tr, :det)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = Rob32($F(rewrap(x)))
+    @eval $F(x::Matrix{Robust32}) = Rob32($F(rewrap(x)))
 end
+
+adjoint(x::Matrix{Robust32}) = Adjoint(x)
+transpose(x::Matrix{Robust32}) = Transpose(x)
 
 for F in (:isdiag, :ishermitian, :isposdef, :isposdef!, :issuccess, :issymmetric, :istril, :istriu)
-  @eval LinearAlgebra.$F(x::Matrix{Robust32}) = $F(rewrap(x))
+  @eval $F(x::Matrix{Robust32}) = $F(rewrap(x))
 end
 
-LinearAlgebra.dot(x::Array{Robust32,N}, y::Array{Robust32,N}) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
-LinearAlgebra.cross(x::Array{Robust32,1}, y::Array{Robust32,1}) where {N} = rewrap(cross(rewrap(x), rewrap(y)))
+dot(x::Array{Robust32,N}, y::Array{Robust32,N}) where {N} = Rob32(dot(rewrap(x), rewrap(y)))
+cross(x::Array{Robust32,1}, y::Array{Robust32,1}) where {N} = rewrap(cross(rewrap(x), rewrap(y)))
 
 for F in (:inv, :sqrt, :exp, :log, 
           :sin, :cos, :tan, :csc, :sec, :cot, :asin, :acos, :atan, :acsc, :asec, :acot,
           :sinh, :cosh, :tanh, :csch, :sech, :coth, :asinh, :acosh, :atanh, :acsch, :asech, :acoth)
-    @eval LinearAlgebra.$F(x::Matrix{Robust32}) = reinterpret(Robust32, LinearAlgebra.$F(rewrap(x)))
+    @eval $F(x::Matrix{Robust32}) = reinterpret(Robust32, $F(rewrap(x)))
 end
 
-LinearAlgebra.adjoint(x::Matrix{Robust32}) = Adjoint(x)
-LinearAlgebra.transpose(x::Matrix{Robust32}) = Transpose(x)
-
 # diag diagm diagind
-LinearAlgebra.diag(x::Matrix{Robust32}) = rewrap(diag(rewrap(Float64, x)))
+diag(x::Matrix{Robust32}) = rewrap(diag(rewrap(Float64, x)))
                                 
-LinearAlgebra.svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(rewrap(A); kw...))
-LinearAlgebra.eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(rewrap(A); kw...))
-LinearAlgebra.svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(rewrap(A)))
-LinearAlgebra.eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(rewrap(A)))
+svdvals(A::Matrix{Robust32}; kw...) = rewrap(svdvals(rewrap(A); kw...))
+eigvals(A::Matrix{Robust32}; kw...) = rewrap(eigvals(rewrap(A); kw...))
+svdvals!(A::Matrix{Robust32}) = rewrap(svdvals!(rewrap(A)))
+eigvals!(A::Matrix{Robust32}) = rewrap(eigvals!(rewrap(A)))
 
-function LinearAlgebra.svd(x::Matrix{Robust32})
+function svd(x::Matrix{Robust32})
     u, s, v = svd(rewrap(x))
     U = rewrap(u)
     S = rewrap(s)
@@ -128,7 +128,7 @@ function LinearAlgebra.svd(x::Matrix{Robust32})
     return SVD{Robust32,Robust32,Matrix{Robust32}}(U, S, V)
 end
                                     
-function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
+function vd!(x::Matrix{Robust32}; kw...)
     u, s, v = svd!(rewrap(x); kw...)
     U = rewrap(u)
     S = rewrap(s)
@@ -136,28 +136,28 @@ function LinearAlgebra.svd!(x::Matrix{Robust32}; kw...)
     return SVD{Robust32,Robust32,Matrix{Robust32}}(U, S, V)
 end
 
-function LinearAlgebra.eigen(x::Matrix{Robust32}; kw...)
+function eigen(x::Matrix{Robust32}; kw...)
     v, m = eigen(rewrap(x); kw...)
     V = rewrap(v)
     M = rewrap(m)
     return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)
 end
 
-function LinearAlgebra.eigen!(x::Matrix{Robust32}; kw...)
+function eigen!(x::Matrix{Robust32}; kw...)
     v, m = eigen!(rewrap(x); kw...)
     V = rewrap(v)
     M = rewrap(m)
     return Eigen{ComplexR32,ComplexR32,Matrix{ComplexR32},Vector{ComplexR32}}(V,M)
 end
 
-function LinearAlgebra.lu(x::Matrix{Robust32}, pivot=Val{true}; check=true)
+function lu(x::Matrix{Robust32}, pivot=Val{true}; check=true)
    xx = rewrap(x)
    res = lu(xx, pivot(); check=check)
    yy = rewrap(res.factors)
    return LU{Robust32, Matrix{Robust32}}(yy, res.ipiv, res.info)
 end
 
-function LinearAlgebra.lu!(x::Matrix{Robust32}, pivot=Val{true}; check=true)
+function lu!(x::Matrix{Robust32}, pivot=Val{true}; check=true)
    xx = rewrap(x)
    res = lu(xx, pivot(); check=check)
    yy = rewrap(res.factors)
@@ -165,14 +165,14 @@ function LinearAlgebra.lu!(x::Matrix{Robust32}, pivot=Val{true}; check=true)
    return LU{Robust32, Matrix{Robust32}}(yy, res.ipiv, res.info)
 end
 
-function LinearAlgebra.cholesky(x::Matrix{Robust32}, pivot=Val{false}; check=true)
+function cholesky(x::Matrix{Robust32}, pivot=Val{false}; check=true)
    xx = rewrap(x)
    res = cholesky(xx, pivot(); check=check)
    yy = rewrap(res.factors)
    return Cholesky{Robust32, Matrix{Robust32}}(yy, res.uplo, res.info)
 end
 
-function LinearAlgebra.cholesky!(x::Matrix{Robust32}, pivot=Val{false}; check=true)
+function cholesky!(x::Matrix{Robust32}, pivot=Val{false}; check=true)
    xx = rewrap(x)
    res = cholesky(xx, pivot(); check=check)
    yy = rewrap(res.factors)
@@ -180,14 +180,14 @@ function LinearAlgebra.cholesky!(x::Matrix{Robust32}, pivot=Val{false}; check=tr
    return Cholesky{Robust32, Matrix{Robust32}}(yy, res.uplo, res.info)
 end
 
-function LinearAlgebra.lmul!(x::Matrix{Robust32}, y::Matrix{Robust32})
+function lmul!(x::Matrix{Robust32}, y::Matrix{Robust32})
    xx = rewrap(x)
    yy = rewrap(y)
    res = lmul!(xx, yy)
    return rewrap(res)
 end
 
-function LinearAlgebra.lmul!(x::AbstractMatrix{Robust32}, y::AbstractVector{Robust32})
+function lmul!(x::AbstractMatrix{Robust32}, y::AbstractVector{Robust32})
    xx = rewrap(x)
    yy = rewrap(y)
    res = lmul!(xx, yy)
