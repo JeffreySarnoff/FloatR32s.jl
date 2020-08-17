@@ -1,3 +1,3 @@
 # Robust32s
-#### a package for performant, accurate Float32 computation
+#### a package for performant, accurate computation with Float32s
 
