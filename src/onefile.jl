@@ -357,3 +357,4 @@ Base.rand(::Type{Robust32}, n::Int) = Rob32.(Float64.(rand(Float32, n)))
 Base.rand(::Type{Robust32}, n1::Int, n2::Int) = Rob32.(Float64.(rand(Float32, n1, n2)))
 
 end  # Robust32s
+
