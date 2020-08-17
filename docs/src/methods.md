@@ -1,2 +1,3 @@
-### behind the type
+## Developing the Type
+
 How its done.
