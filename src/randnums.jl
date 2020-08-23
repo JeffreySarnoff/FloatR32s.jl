@@ -1,18 +1,4 @@
-function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Robust32}})
-    hi, lo  = rand(rng, T, 2)
-    if hi === zero(T)
-        if lo === zero(T)
-            return zero(DoubleFloat(T))
-        end
-        hi, lo = lo, hi
-    end
-    frlo, xplo  = frexp(lo)
-    xplo = Base.exponent(hi) - min(1, fld(xplo,4)) - abs(Base.exponent(eps(hi)))
-    lo = ldexp(frlo, xplo)
-    lo = rand(rng, Bool) ? lo : -lo
-
-    DoubleFloat(hi, lo)
-end
+rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Robust32}}) = rand(rng, Robust32)
 
 function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Complex{Robust32}}})
     re = rand(rng, Robust32)
@@ -81,7 +67,7 @@ end
 # normal variates
 
 function randn(rng::AbstractRNG, ::Type{Robust32})
-    urand1, urand2 = rand(rng, Robust32, 2)
+    urand1, urand2 = rand(rng, Float64, 2)
     urand1 = urand1 + urand1 - 1
     urand2 = urand2 + urand2 - 1
     s = urand1*urand1 + urand2*urand2
@@ -94,5 +80,6 @@ function randn(rng::AbstractRNG, ::Type{Robust32})
     end
 
     s = sqrt( -log(s) / s )
-    return (urand1 + urand2) * s
+    s = (urand1 + urand2) * s
+    return Robust32(s)
 end
