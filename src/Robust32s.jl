@@ -27,6 +27,7 @@ import Base: convert, promote_rule, show, string,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
              isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin,
              mod, rem, div, fld, cld, divrem, fldmod,
+             floor, ceil, truc, round,
              rand, randn, evalpoly
              
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
