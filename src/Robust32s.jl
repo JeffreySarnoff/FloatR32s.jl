@@ -234,6 +234,20 @@ for F in (:hypot, :clamp)
   end  
 end
 
+for F in (:floor, :ceil, :trunc, :round)
+  for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
+    @eval begin
+      Base.$F(x::Robust32) = $F(value64(x))
+      Base.$F(::Type{T}, x::Robust32) = T($F(value64(x)))
+    end
+  end  
+end
+
+Base.round(x::Robust32; digits=0, base=10) = 
+    Rob32(round(value64(x), digits=digits, base=base))
+Base.round(x::Robust32; sigdigits, base=10) = 
+    Rob32(round(value64(x), sigdigits=sigdigits, base=base))
+  
 for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :asec,
           :asecd, :asech, :asin, :asind, :asinh, :atan, :atand, :atanh, :cos, :cosc,
           :cosd, :cosh, :cospi, :cot, :cotd, :coth, :csc, :cscd, :csch, :deg2rad,
