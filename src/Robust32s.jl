@@ -59,8 +59,8 @@ value32(x::ComplexR32) = (value32(x.re), value32(x.im))
 
 # internal use only
 Rob32(x::Float64) = Robust32(As64, x)
+# process `divrem`, `fldmod` automatically 
 Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
-Rob32(x::NTuple{N,Float64}) where {N} = Robust32.(As64, x)
 
 Float64(x::Robust32) = Float64(value32(x))
 convert(::Type{Float64}, x::Robust32) = Float64(x)
@@ -139,8 +139,16 @@ zero(x::Robust32) = zero(Robust32)
 one(x::Robust32) = one(Robust32)
 two(x::Robust32) = two(Robust32)
 
-frexp(x::Robust32) = frexp(value32(x))
-ldexp(fr::Float32, ex::Int) = Rob32(ldexp(Float64(fr), ex))
+function frexp(x::Robust32)
+  fr64, xp = frexp(value64(x))
+  fr = Robust32(fr64)
+  return (fr, xp)
+end
+
+function ldexp(fr::Robust32, ex::Int)
+  fr64 = value64(fr)
+  return Rob32(ldexp(fr64, ex))
+end  
 
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
   @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
