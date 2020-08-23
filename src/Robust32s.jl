@@ -291,5 +291,6 @@ end
     convert(Ptr{T}, pointer(m,1))
 
 include("linearalgebra.jl")
+include("randnums.jl")
   
 end  # Robust32s
