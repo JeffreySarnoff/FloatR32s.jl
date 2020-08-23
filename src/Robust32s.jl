@@ -35,6 +35,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
                   log, log10, log1p, log2, mod2pi, modf, rad2deg, rem2pi, sec, secd, sech,
                   sin, sinc, sincos, sincosd, sind, sinh, sinpi, tan, tand, tan #  sincospi
 
+using Random
 using LinearAlgebra
 # using Gaius
 
@@ -290,7 +291,7 @@ end
 @inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
 
-include("linearalgebra.jl")
 include("randnums.jl")
+include("linearalgebra.jl")
   
 end  # Robust32s
