@@ -26,6 +26,7 @@ import Base: convert, promote_rule, show, string,
              signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
              isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin,
+             mod, rem, div, fld, cld, divrem, fldmod,
              evalpoly
              
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
@@ -151,7 +152,8 @@ for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   end  
 end
 
-for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign)
+for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
+          :mod, :rem, :div, :fld, :cld, :divrem, :fldmod)
   @eval begin
     Base.$F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
     Base.$F(x::Robust32, y::Real) = $F(promote(x,y)...)
