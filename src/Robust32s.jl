@@ -59,6 +59,8 @@ value32(x::ComplexR32) = (value32(x.re), value32(x.im))
 
 # internal use only
 Rob32(x::Float64) = Robust32(As64, x)
+Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
+Rob32(x::NTuple{N,Float64}) where {N} = Robust32.(As64, x)
 
 Float64(x::Robust32) = Float64(value32(x))
 convert(::Type{Float64}, x::Robust32) = Float64(x)
