@@ -18,7 +18,7 @@ Exports: `Robust32`, `ComplexR32`
 """
 module Robust32s
 
-export Robust32, ComplexR32
+export Robust32, ComplexR32, randpm
 
 import Base: convert, promote_rule, show, string,
              Float64, Float32,
