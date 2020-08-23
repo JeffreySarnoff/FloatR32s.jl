@@ -95,6 +95,10 @@ convert(::Type{Rational{T}}, x::Robust32) where {T} = convert(Rational{T}, value
 convert(::Type{Rational}, x::Robust32) = convert(Rational{Int64}, x)
 promote_rule(::Type{Robust32}, ::Type{Rational}) = Robust32
 
+Robust32(x::T) where {T<:Irrational} = Robust32(Float64(x))
+convert(::Type{Robust32}, x::T) where {T<:Irrational} = Rob32(Float64(x))
+promote_rule(::Type{Robust32}, ::Type{Irrational})  = Robust32
+
 const Robust32_0 = Rob32(0.0)
 const Robust32_1 = Rob32(1.0)
 const Robust32_2 = Rob32(2.0)
