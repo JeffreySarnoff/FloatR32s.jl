@@ -1,6 +1,8 @@
-rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Robust32}}) = rand(rng, Robust32)
-
-function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Complex{Robust32}}})
+unction rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{T}}) where {T<:Robust32}
+    return Rob32(Float64(rand(rng, Float32))
+ end        
+    
+function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Complex{T}}}) where {T<:Robust32}
     re = rand(rng, Robust32)
     im = rand(rng, Robust32)
     return Complex{Robust32}(re, im)
