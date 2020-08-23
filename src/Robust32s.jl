@@ -234,7 +234,7 @@ for F in (:hypot, :clamp)
   end  
 end
 
-for F in (:floor, :ceil, :trunc, :round)
+for F in (:floor, :ceil, :trunc)
   @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
     for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
       @eval Base.$F(::Type{$T}, x::Robust32) = $T(Float32($F(value64(x))))
@@ -243,6 +243,10 @@ end
 
 Base.round(x::Robust32; digits=0, sigdigits=0, base=10) = 
     iszero(sigdigits) ? Rob32(round(value64(x), digits=digits, base=base)) : Rob32(round(value64(x), sigdigits=sigdigits, base=base))
+
+for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
+  @eval Base.round(::Type{$T}, x::Robust32) = round($T, Float64(x))
+end  
 
 for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :asec,
           :asecd, :asech, :asin, :asind, :asinh, :atan, :atand, :atanh, :cos, :cosc,
