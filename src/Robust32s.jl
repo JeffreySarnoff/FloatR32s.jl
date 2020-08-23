@@ -235,10 +235,9 @@ for F in (:hypot, :clamp)
 end
 
 for F in (:floor, :ceil, :trunc, :round)
-  for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
-    @eval begin
-      Base.$F(x::Robust32) = Rob32($F(value64(x)))
-      Base.$F(::Type{$T}, x::Robust32) = $T(Float32($F(value64(x))))
+  @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
+    for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
+      @eval Base.$F(::Type{$T}, x::Robust32) = $T(Float32($F(value64(x))))
     end
   end  
 end
