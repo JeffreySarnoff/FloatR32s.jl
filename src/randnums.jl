@@ -1,5 +1,5 @@
 function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{T}}) where {T<:Robust32}
-    return Rob32(Float64(rand(rng, Float32))
+    return Rob32(Float64(rand(rng, Float32)))
 end        
 
 function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{Complex{T}}}) where {T<:Robust32}
