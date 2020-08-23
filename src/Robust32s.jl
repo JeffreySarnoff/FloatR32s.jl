@@ -139,16 +139,68 @@ zero(x::Robust32) = zero(Robust32)
 one(x::Robust32) = one(Robust32)
 two(x::Robust32) = two(Robust32)
 
-function frexp(x::Robust32)
+#=
+   >>> Important Implementation Note <<<
+
+   Base.frexp(x::Robust32) = frexp64(x)
+   Base.ldexp(fr::Robust32, xp::Int) = ldexp64(fr, xp)
+
+   -----
+
+   frexp32(::Robust32)
+   ldexp32(::Robust32, ::Int)
+
+   This pair is to be used with input data (`ldexp32`)
+   and output values (`frexp32`) should the need arise. 
+
+   For example, if one prefer to generate 
+   initial input data values by combining 
+   (significand, exponent) pairings,
+   use `ldexp32.(significands, exponents)`.
+
+   Similarly, if one prefer to store results
+   in the form of (significand, exponent) pairings
+   use `frexp32.(results)`.
+  
+   ----
+
+   frexp64(::Robust32)
+   ldexp64(::Robust32, ::Int)
+
+   This pair works with 64-bit values directly.
+   That design decision makes the following hold:
+      `ldexp64(frexp64(x::Robust32)) == x`,
+   
+   _otherwise it would not hold much of the time_
+   _consider_ `x = sqrt(Robust32(2.0))`.
+=#
+
+frexp(x::Robust32) = frexp64(x)
+ldexp(fr::Robust32, xp::Int) = ldexp64(fr, xp)
+
+function frexp64(x::Robust32)
   fr64, xp = frexp(value64(x))
-  fr = Robust32(fr64)
+  fr = Rob32(fr64)
   return (fr, xp)
 end
 
-function ldexp(fr::Robust32, ex::Int)
+function ldexp64(fr::Robust32, ex::Int)
   fr64 = value64(fr)
   return Rob32(ldexp(fr64, ex))
-end  
+end
+ldexp64(x::Tuple{Robust32, Int}) = ldexp64(x[1], x[2])
+
+function frexp32(x::Robust32)
+  fr64, xp = frexp(Float64(x))
+  fr = Rob32(fr64)
+  return (fr, xp)
+end
+
+function ldexp32(fr::Robust32, ex::Int)
+  fr64 = Float64(fr)
+  return Rob32(ldexp(fr64, ex))
+end
+ldexp32(x::Tuple{Robust32, Int}) = ldexp32(x[1], x[2])
 
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
   @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
