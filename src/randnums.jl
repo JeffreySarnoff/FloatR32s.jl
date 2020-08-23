@@ -1,4 +1,4 @@
-unction rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{T}}) where {T<:Robust32}
+Function rand(rng::AbstractRNG, ::Random.SamplerTrivial{Random.CloseOpen01{T}}) where {T<:Robust32}
     return Rob32(Float64(rand(rng, Float32))
  end        
     
