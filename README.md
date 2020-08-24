@@ -14,6 +14,9 @@
  and differential equations. Rare exceptions exist, of course.
  > (adapted from W. Kahan)
  
+ -----
+ 
+ 
  This package implements that Rule-of-Thumb in a highly performant manner.
  To offer the desired performance, this package works with `Float32` data
  and provides `Float32` results.  This is handled automatically; so as long
