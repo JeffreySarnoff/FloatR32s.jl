@@ -22,7 +22,7 @@ export Robust32, ComplexR32
 
 import Base: convert, promote_rule, show, string,
              Float64, Float32,
-             ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^,
+             ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^, fma, muladd,
              signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
              isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin,
@@ -265,6 +265,15 @@ for F in (:modf, :sincos, :sincosd) # , :sincospi)
             return Rob32(s), Rob32(c)
          end
 end
+
+fma(x::Robust32, y::Robust32, z::Robust32) = Rob32(fma(value64(x), value64(y), value64(z)))
+fma(x::Robust32, y::Real, z::Real) = fma(promote(x,y,z)...)
+fma(x::Real, y::Robust32, z::Real) = fma(promote(x,y,z)...)
+fma(x::Real, y::Real, z::Robust32) = fma(promote(x,y,z)...)
+muladd(x::Robust32, y::Robust32, z::Robust32) = Rob32(muladd(value64(x), value64(y), value64(z)))
+muladd(x::Robust32, y::Real, z::Real) = muladd(promote(x,y,z)...)
+muladd(x::Real, y::Robust32, z::Real) = muladd(promote(x,y,z)...)
+muladd(x::Real, y::Real, z::Robust32) = muladd(promote(x,y,z)...)
 
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
     Rob32(evalpoly(value64(x), map(value64, p)))
