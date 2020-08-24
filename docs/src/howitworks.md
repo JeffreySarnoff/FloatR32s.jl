@@ -23,8 +23,8 @@
  > (from W. Kahan, amended)
  
  This package implements that Rule-of-Thumb in a highly performant manner.
- To offer the desired performance, this package works with `Float32` data
- and provides `Float32` results.  Internally, `Float64` math is used. 
+ We work from `Float32` data and provide `Float32` results.
+ Internally, `Float64` math is used. 
  `Float64s` have 2x + 5 more significant bits than `Float32s`.
  So, all is well.
 
