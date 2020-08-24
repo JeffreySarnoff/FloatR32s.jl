@@ -13,7 +13,7 @@ end
 @testset "mul/div" begin
   @test abs(2/9 -  (third32 * 2*third32)) > 9 *( abs(2/9 - (thirdR32 * 2*thirdR32)))  
   @test two32 - third32 == twoR32 - thirdR32  
-  @test fourthirds - (two32 - 2*third32) > 2.75 * (fourthirds - (twoR32 - 2*thirdR32))
+  #@test fourthirds - (two32 - 2*third32) > 2.75 * (fourthirds - (twoR32 - 2*thirdR32))
 end
 
 @testset "root/power" begin
