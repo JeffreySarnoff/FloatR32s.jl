@@ -40,6 +40,7 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
 using Random
 using LinearAlgebra
 # using Gaius
+include("js_basics.jl")
 
 struct As64 end # internal use only
 
@@ -119,7 +120,7 @@ const Robust32_1 = Rob32(1.0)
 const Robust32_2 = Rob32(2.0)
 
 Robust32(x::Bool) = x ? Robust32_1 : Robust32_0
-
+Bool(x::Robust32) = iszero(x) ? false : true
 Base.hash(x::Robust32, h::UInt64) = Base.hash(value32(x), h)
 
 Base.decompose(x::Robust32) = Base.decompose(value32(x))
@@ -225,6 +226,10 @@ for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
     $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
 end
+
+min(x::Robust32, y::Robust32) = Rob32(jsmin(value64(x), value64(y)))
+max(x::Robust32, y::Robust32) = Rob32(jsmax(value64(x), value64(y)))
+minmax(x::Robust32, y::Robust32) = Rob32(jsminmax(value64(x), value64(y)))
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld, :divrem, :fldmod)
