@@ -15,7 +15,8 @@
 A module for robust Float32 computation.
 
 Exports: `Robust32`, `ComplexR32`
-"""
+""" Robust32s
+
 module Robust32s
 
 export Robust32, ComplexR32
