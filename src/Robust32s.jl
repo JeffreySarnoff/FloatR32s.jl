@@ -329,7 +329,7 @@ end
 @inline cvtptr(::Type{T}, m::Array{S,N}) where {N,T,S} =
     convert(Ptr{T}, pointer(m,1))
 
-include("randnums.jl")
 include("linearalgebra.jl")
+include("randnums.jl")
   
 end  # Robust32s
