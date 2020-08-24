@@ -9,5 +9,6 @@ sqrt_twoR32 = sqrt(twoR32)
 
   @test maxintfloat(Float32) == maxintfloat(Robust32)
   @test floatmin(Float32) == floatmin(Robust32)
+  @test floatmax(Float32) == floatmax(Robust32)
   @test typemax(Float32) == typemax(Robust32)
 end  
