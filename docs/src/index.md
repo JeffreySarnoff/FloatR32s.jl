@@ -22,9 +22,11 @@ Your raw data `rawdata` is stored as `Ints` or as `Float32s` or as `Float64s` or
 
 Just do it.
 
+`processed_data = your_computation(data)`
+
 ### Collecting results
 
-Your processed data `processed_data` is stored as `Robust32s`.
+Your processed data `processed_data` is stored as `Robust32s`. Report the results as `Float32s`.
 
 `results = Float32.(processed_data);`
 
