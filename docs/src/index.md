@@ -1,6 +1,11 @@
 # Robust32s.jl
-### More accurate computation with Float32 data
+### Increased accuracy using Float32 data
+
 #### Copyright ©2020 by Jeffrey Sarnoff.  Released under the MIT License.
+
+----
+https://jeffreysarnoff.github.io/Robust32s.jl/dev/
+----
 
 ## How To Use This Package
 
