@@ -2,6 +2,10 @@
 
 A more robust Float32 that preserves `float` performance.
 
+----
+https://jeffreysarnoff.github.io/Robust32s.jl/dev/
+----
+
 > An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
  Perform your compututations carrying somewhat more than twice the precision
  of your data and somewhat more than twice the precision of you seek in your results.
