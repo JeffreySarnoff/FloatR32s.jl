@@ -1,8 +1,8 @@
 third32  = Float32(1)/Float32(3)
 thirdR32 = Robust32(1)/Robust32(3)
-fourthirds = Float32(4)/Float32(3)
 two32  = Float32(2)
 twoR32 = Robust32(2)
+fourthirds = Float32(4)/Float32(3)
 
 @testset "add/sub" begin
   @test two32 + two32 == twoR32 + twoR32  
