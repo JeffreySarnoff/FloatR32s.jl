@@ -17,6 +17,6 @@ end
 end
 
 @testset "root/power" begin
-  @test abs(two32 - sqrt(sqrt(two32))^4) > abs(twoR32 - sqrt(sqrt(twoR32))^5)
+  @test abs(two32 - sqrt(sqrt(two32))^4) > abs(twoR32 - sqrt(sqrt(twoR32))^4)
   @test abs(two32 - sqrt(cbrt(two32))^6) > abs(twoR32 - sqrt(cbrt(twoR32))^6)
 end
