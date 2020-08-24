@@ -1,10 +1,11 @@
 # Robust32s
 
-A more robust Float32 that preserves `float` performance.
+## A more robust Float32 that preserves `float` performance.
+
+[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://jeffreysarnoff.github.io/Robust32s.jl/dev)
 
 ----
-[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://jeffreysarnoff.github.io/Robust32s.jl/dev)
-----
+
 
 > An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
  Perform your compututations carrying somewhat more than twice the precision
