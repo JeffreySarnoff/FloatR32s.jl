@@ -19,9 +19,8 @@
  
  This package implements that Rule-of-Thumb in a highly performant manner.
  To offer the desired performance, this package works with `Float32` data
- and provides `Float32` results.  This is handled automatically; so as long
- as you are committed to working with `Float32` data and obtaining `Float32`
- results, all is well.
+ and provides `Float32` results.  This is handled automatically. While
+ you are working with `Float32` data and obtaining `Float32` results, all is well.
  
  ### exports
  
