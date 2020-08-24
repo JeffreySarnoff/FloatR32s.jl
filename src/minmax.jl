@@ -1,6 +1,8 @@
 #=
-   High performance work-alike rewrites of `min`, `max`, `minmax`, `maxmin`.
+   My faster rewrites of `min`, `max`, `minmax`, `maxmin`.
    
+   These are processing isomorphs. NaNs are handled properly.
+
    For use with `Float32`, `Float64`, and other IEEEFloats.
 =#
    
@@ -8,6 +10,10 @@ jsmin(a, b) = signbit(a-b) ? a : b + (a-a)
 jsmax(a, b) =  signbit(b-a) ? a : b + (a-a)
 jsminmax(a, b) = (jsmin(a,b), jsmax(a,b))
 jsmaminx(a, b) = (jsmax(a,b), jsmin(a,b))
+
+#=
+   their utilzation
+=#
 
 min(x::Robust32, y::Robust32) = Rob32(jsmin(value64(x), value64(y)))
 max(x::Robust32, y::Robust32) = Rob32(jsmax(value64(x), value64(y)))
