@@ -10,6 +10,12 @@ twoR32 = Robust32(2)
   @test fourthirds - (two32 - 2*third32) >= 3*(fourthirds - (twoR32 - 2*thirdR32))
 end
 
+@testset "mul/div" begin
+  @test abs(2/9 -  (third32 * 2*third32)) > 9 *( abs(2/9 - (thirdR32 * 2*thirdR32)))  
+  @test two32 - third32 == twoR32 - thirdR32  
+  @test fourthirds - (two32 - 2*third32) >= 3*(fourthirds - (twoR32 - 2*thirdR32))
+end
+
 @testset "root/power" begin
   @test abs(two32 - sqrt(sqrt(two32))^4) > abs(twoR32 - sqrt(sqrt(twoR32))^5)
   @test abs(two32 - sqrt(cbrt(two32))^6) > abs(twoR32 - sqrt(cbrt(twoR32))^6)
