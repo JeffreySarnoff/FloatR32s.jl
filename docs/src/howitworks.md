@@ -26,5 +26,5 @@
  We work from `Float32` data and provide `Float32` results.
  `Float64s` have 2x + 5 more significant bits than `Float32s`.
  Internally, `Float64` math is used. This all is handled automatically,
- when you use the exported types. So, all is well.
+ when you use the exported type[s]. So, all is well.
 
