@@ -40,7 +40,6 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acs
 using Random
 using LinearAlgebra
 # using Gaius
-include("js_basics.jl")
 
 struct As64 end # internal use only
 
@@ -227,26 +226,6 @@ for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   end  
 end
 
-min(x::Robust32, y::Robust32) = Rob32(jsmin(value64(x), value64(y)))
-max(x::Robust32, y::Robust32) = Rob32(jsmax(value64(x), value64(y)))
-minmax(x::Robust32, y::Robust32) = Rob32(jsminmax(value64(x), value64(y)))
-maxmin(x::Robust32, y::Robust32) = Rob32(jsminmax(value64(x), value64(y)))
-
-min(x::Robust32, y::Float64) = Rob32(jsmin(value64(x), y))
-max(x::Robust32, y::Float64) = Rob32(jsmax(value64(x), y))
-minmax(x::Robust32, y::Float64) = Rob32(jsminmax(value64(x), y))
-maxmin(x::Robust32, y::Float64) = Rob32(jsminmax(value64(x), y))
-
-min(x::Float64, y::Robust32) = Rob32(jsmin(x, value64(y)))
-max(x::Float64, y::Robust32) = Rob32(jsmax(x, value64(y)))
-minmax(x::Float64, y::Robust32) = Rob32(jsminmax(x, value64(y)))
-maxmin(x::Float64, y::Robust32) = Rob32(jsminmax(x, value64(y)))
-
-min(x::Robust32, y::Real) = Rob32(jsmin(value64(x), Float64(y)))
-max(x::Robust32, y::Real) = Rob32(jsmax(value64(x), Float64(y)))
-minmax(x::Robust32, y::Real) = Rob32(jsminmax(value64(x), Float64(y)))
-maxmin(x::Robust32, y::Real) = Rob32(jsminmax(value64(x), Float64(y)))
-
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld, :divrem, :fldmod)
   @eval begin
@@ -282,6 +261,8 @@ Base.round(x::Robust32; digits=0, sigdigits=0, base=10) =
 for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
   @eval Base.round(::Type{$T}, x::Robust32) = round($T, Float64(x))
 end  
+
+include("minmax.jl")
 
 for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :acsch, :asec,
           :asecd, :asech, :asin, :asind, :asinh, :atan, :atand, :atanh, :cos, :cosc,
