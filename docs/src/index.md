@@ -4,8 +4,6 @@
 #### Copyright ©2020 by Jeffrey Sarnoff.  Released under the MIT License.
 
 ----
-https://jeffreysarnoff.github.io/Robust32s.jl/dev/
-----
 
 ## How To Use This Package
 
