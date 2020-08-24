@@ -1,18 +1,18 @@
-## How It Works
+### How It Works
 
-### The Essential Requirements
+#### The Essential Requirements
 
 - You are comfortable working with all input data as `Float32s`.
 - You are comfortable reporting all the results using `Float32s`.
 - You respect `Robust32` values (just let them work, no peeking).
 
-### The Pervasive Conventions
+#### The Pervasive Conventions
 
 - any information introduced to the computation is converted to `Float32s`.
 - programmed calculations and computations are performed using `Float64s`.
 - all information retrieved from the computation is converted to `Float32s`.
 
-## Why It Works
+### Why It Works
 
 
 > An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
