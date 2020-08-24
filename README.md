@@ -2,7 +2,7 @@
 
 ## A more robust Float32 that preserves `float` performance.
 
-[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://jeffreysarnoff.github.io/Robust32s.jl/dev)
+[![Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://jeffreysarnoff.github.io/Robust32s.jl/dev)
 
 ----
 
