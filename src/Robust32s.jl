@@ -59,6 +59,9 @@ const ComplexR32 = Complex{Robust32}
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
 
+show(io::IO, x::Robust32) = show(io, value32(x))
+string(x::Robust32) = string(value32(x))
+
 # internal use only
 Rob32(x::Float64) = Robust32(As64, x)
 Rob32(x::Robust32) = x
@@ -78,21 +81,13 @@ convert(::Type{Float32}, x::Robust32) = Float32(x)
 promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
 convert(::Type{Robust32}, x::Float32) = Robust32(x)
 
-Float16(x::Robust32) = Float16(value64(x))
-Robust32(x::Float16) = Rob32(Float64(x))
-convert(::Type{Float16}, x::Robust32) = Float16(x)
-promote_rule(::Type{Robust32}, ::Type{Float16}) = Robust32
-convert(::Type{Robust32}, x::Float16) = Robust32(x)
-
-show(io::IO, x::Robust32) = show(io, value32(x))
-string(x::Robust32) = string(value32(x))
-
 for T in (:BigFloat, :Float16)
   @eval begin
-    Base.$T(x::Robust32) = $T(value32(x))
-    Robust32(x::$T) = Rob32(Float64(Float32(x)))
-    Base.convert(::Type{$T}, x::Robust32) = $T(x)
-    Base.promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
+    Base.$T(x::Robust32) = $T(value64(x))
+    Robust32(x::$T) = Rob32(Float64(x))
+    convert(::Type{$T}, x::Robust32) = $T(x)
+    promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
+    convert(::Type{Robust32}, x::$T) = Robust32(x)
   end
 end
 
@@ -103,6 +98,7 @@ for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
     Robust32(x::$T) = Rob32(Float64(Float32(x)))
     convert(::Type{$T}, x::Robust32) = $T(x)
     promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
+    convert(::Type{Robust32}, x::$T) = Robust32(x)
   end
 end
 
@@ -215,32 +211,32 @@ end
 ldexp32(x::Tuple{Robust32, Int}) = ldexp32(x[1], x[2])
 
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
-  @eval Base.$F(x::Robust32) = Rob32($F(value64(x)))
+  @eval $F(x::Robust32) = Rob32($F(value64(x)))
 end
 
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   @eval begin
-    Base.$F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
-    Base.$F(x::Robust32, y::Real) = $F(promote(x,y)...)
-    Base.$F(x::Real, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
+    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
+    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
 end
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld, :divrem, :fldmod)
   @eval begin
-    Base.$F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
-    Base.$F(x::Robust32, y::Real) = $F(promote(x,y)...)
-    Base.$F(x::Real, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
+    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
+    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
 end
 
 for F in (:hypot, :clamp)
   @eval begin
-    Base.$F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
-    Base.$F(x::Robust32, y::Real, z::Real) = $F(promote(x,y,z)...)
-    Base.$F(x::Real, y::Robust32, z::Real) = $F(promote(x,y,z)...)
-    Base.$F(x::Real, y::Real, z::Robust32) = $F(promote(x,y,z)...)
+    $F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
+    $F(x::Robust32, y::Real, z::Real) = $F(promote(x,y,z)...)
+    $F(x::Real, y::Robust32, z::Real) = $F(promote(x,y,z)...)
+    $F(x::Real, y::Real, z::Robust32) = $F(promote(x,y,z)...)
   end  
 end
 
@@ -264,14 +260,14 @@ for F in (:abs2, :acos, :acosd, :acosh, :acot, :acotd, :acoth, :acsc, :acscd, :a
           :exp, :exp10, :exp2, :expm1, :log, :log10, :log1p, :log2, :mod2pi,
           :rad2deg, :rem2pi, :sec, :secd, :sech, :sin, :sinc, :sind, :sinh,
           :sinpi, :tan, :tand, :tanh)
-    @eval Base.Math.$F(x::Robust32) = Rob32($F(value64(x)))
+    @eval $F(x::Robust32) = Rob32($F(value64(x)))
 end
 
-Base.Math.atan(x::Robust32, y::Robust32) = Rob32(atan(value64(x), value64(y)))
+atan(x::Robust32, y::Robust32) = Rob32(atan(value64(x), value64(y)))
 
 for F in (:modf, :sincos, :sincosd) # , :sincospi)
   @eval function $F(x::Robust32)
-            s, c = Base.Math.$F(value64(x))
+            s, c = $F(value64(x))
             return Rob32(s), Rob32(c)
          end
 end
