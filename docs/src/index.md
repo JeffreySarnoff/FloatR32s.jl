@@ -1,6 +1,31 @@
-# Robust32s
-### a package for performant, accurate computation with Float32s
+# Robust32s.jl
+### More accurate computation with Float32 data
+#### Copyright &copy; 2020 by Jeffrey Sarnoff.  Released under the MIT License.
 
-## Use
+## How To Use This
 
+There are two exported types: `Robust32` and `ComplexR32`.  Use them as you would `Float32` and `ComplexF32`.
 It Just Works.
+
+### The Only Requirements
+
+(a) You are comfortable working with your data as `Float32s`.
+(b) You are comfortable reporting your results as `Float32s`.
+
+### Bringing in data
+
+Your raw data `rawdata` is stored as `Ints` or as `Float32s` or as `Float64s` or other `Real` type.
+
+`data = Robust32.(rawdata);`
+
+### Computing on the data
+
+Just do it.
+
+### Collecting results
+
+Your processed data `processed_data` is stored as `Robust32s`.
+
+`results = Float32.(processed_data);`
+
+
