@@ -20,7 +20,7 @@
  of your data and somewhat more than twice the precision of you seek in your results.
  This rule has long served statistics, optimization, root-finding, geometry,
  and differential equations. Rare exceptions exist, of course.
- > (adapted from W. Kahan)
+ > (from W. Kahan, stitched together)
  
  This package implements that Rule-of-Thumb in a highly performant manner.
  To offer the desired performance, this package works with `Float32` data
