@@ -1,7 +1,7 @@
 # Robust32s.jl
 ### Increased accuracy using Float32 data
 
-##### Copyright ©2020 by Jeffrey Sarnoff.  Released under the MIT License.
+##### Copyright ©2020 by Jeffrey Sarnoff.  This material is released under the MIT License.
 
 ----
 
