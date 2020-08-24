@@ -2,7 +2,7 @@
 ### More accurate computation with Float32 data
 #### Copyright &copy; 2020 by Jeffrey Sarnoff.  Released under the MIT License.
 
-## How To Use This
+## How To Use This Package
 
 There are two exported types: `Robust32` and `ComplexR32`.  Use them as you would `Float32` and `ComplexF32`.
 It Just Works.
