@@ -31,7 +31,7 @@ const scalar_functions_of_two_args = map(Symbol, (
 ));
 
 const scalar_functions_of_three_args = map(Symbol, (
-    clamp, hypot,
+    clamp, hypot
 ));
 
 const vector_functions_of_one_arg  = ()
