@@ -3,7 +3,7 @@
 A more robust Float32 that preserves `float` performance.
 
 ----
-https://jeffreysarnoff.github.io/Robust32s.jl/dev/
+[![Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://jeffreysarnoff.github.io/Robust32s.jl/dev)
 ----
 
 > An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
