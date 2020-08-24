@@ -69,12 +69,20 @@ Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
 Float64(x::Robust32) = Float64(value32(x))
 convert(::Type{Float64}, x::Robust32) = Float64(x)
 promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
+convert(::Type{Robust32}, x::Float64) = Rob32(x)
 # Robust32(x::Float64) defined as an internal constructor
 
 Float32(x::Robust32) = value32(x)
+Robust32(x::Float32) = Rob32(Float64(x))
 convert(::Type{Float32}, x::Robust32) = Float32(x)
 promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
-Robust32(x::Float32) = Rob32(Float64(x))
+convert(::Type{Robust32}, x::Float32) = Robust32(x)
+
+Float16(x::Robust32) = Float16(value64(x))
+Robust32(x::Float16) = Rob32(Float64(x))
+convert(::Type{Float16}, x::Robust32) = Float16(x)
+promote_rule(::Type{Robust32}, ::Type{Float16}) = Robust32
+convert(::Type{Robust32}, x::Float16) = Robust32(x)
 
 show(io::IO, x::Robust32) = show(io, value32(x))
 string(x::Robust32) = string(value32(x))
