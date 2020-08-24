@@ -9,8 +9,8 @@ It Just Works.
 
 ### The Only Requirements
 
-(a) You are comfortable working with your data as `Float32s`.
-(b) You are comfortable reporting your results as `Float32s`.
+- You are comfortable working with your data as `Float32s`.
+- You are comfortable reporting your results as `Float32s`.
 
 ### Bringing in data
 
