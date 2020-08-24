@@ -16,11 +16,11 @@
 
 
 > An old Rule-of-Thumb offers the simplest way to evade numerical embarrassment.
-  Perform your compututations carrying somewhat more than twice the precision
-  of your data and somewhat more than twice the precision of you seek in your results.
-  This rule has long served statistics, optimization, root-finding, geometry,
-  and differential equations. Rare exceptions exist, of course.
- > (from W. Kahan, amended)
+> Perform your compututations carrying somewhat more than twice the precision
+> of your data and somewhat more than twice the precision of you seek in your results.
+> This rule has long served statistics, optimization, root-finding, geometry,
+> and differential equations. Rare exceptions exist, of course.
+> (W. Kahan, amended)
  
  This package implements that Rule-of-Thumb in a highly performant manner.
  We work from `Float32` data and provide `Float32` results.
