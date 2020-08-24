@@ -63,8 +63,11 @@ show(io::IO, x::Robust32) = show(io, value32(x))
 string(x::Robust32) = string(value32(x))
 
 # internal use only
+Rob32(x::Real) = Robust32(As64, Float64(x))
 Rob32(x::Float64) = Robust32(As64, x)
 Rob32(x::Robust32) = x
+Rob32(x::Float32) = Rob32(Meta.parse(string(x)))
+Rob32(x::Float16) = Rob32(Meta.parse(string(x)))
 
 # process `divrem`, `fldmod` automatically 
 Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
@@ -226,8 +229,12 @@ for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld, :divrem, :fldmod)
   @eval begin
     $F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
-    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
-    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Float32) = $F(x, Rob32(y))
+    $F(x::Float32, y::Robust32) = $F(Rob32(x), y)
+    $F(x::Robust32, y::Float16) = $F(x, Rob32(y))
+    $F(x::Float16, y::Robust32) = $F(Rob32(x), y)
+    $F(x::Robust32, y::Real) = $F(x, Rob32(y))
+    $F(x::Real, y::Robust32) = $F(Rob32(x), y)
   end  
 end
 
