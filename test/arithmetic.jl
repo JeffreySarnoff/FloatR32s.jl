@@ -6,7 +6,8 @@ fourthirds = Float32(4)/Float32(3)
 
 @testset "add/sub" begin
   @test two32 + two32 == twoR32 + twoR32  
-  @test two32 - third32 == twoR32 - thirdR32  
+  @test two32 - third32 == twoR32 - thirdR32
+  
   # @test fourthirds - (two32 - 2*third32) > 2.75 * (fourthirds - (twoR32 - 2*thirdR32))
 end
 
