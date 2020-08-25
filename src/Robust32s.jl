@@ -29,7 +29,8 @@ import Base: convert, promote_rule, show, string,
              isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin,
              mod, rem, div, fld, cld, divrem, fldmod,
              floor, ceil, trunc, round,
-             rand, randn, evalpoly
+             rand, randn, evalpoly,
+             sum, prod, cumsum, cumprod, accumulate, sum!, prod!, cumsum!, cumprod!, accumulate!
              
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
