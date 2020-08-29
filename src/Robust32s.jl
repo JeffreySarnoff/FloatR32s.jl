@@ -235,17 +235,20 @@ for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
     $F(x::Float32, y::Robust32) = $F(Rob32(x), y)
     $F(x::Robust32, y::Float16) = $F(x, Rob32(y))
     $F(x::Float16, y::Robust32) = $F(Rob32(x), y)
-    $F(x::Robust32, y::Real) = $F(x, Rob32(y))
-    $F(x::Real, y::Robust32) = $F(Rob32(x), y)
+    $F(x::Robust32, y::T) where {T<:Real} = $F(x, Rob32(y))
+    $F(x::T, y::Robust32) where {T<:Real} = $F(Rob32(x), y)
   end  
 end
 
 for F in (:hypot, :clamp)
   @eval begin
     $F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
-    $F(x::Robust32, y::Real, z::Real) = $F(promote(x,y,z)...)
-    $F(x::Real, y::Robust32, z::Real) = $F(promote(x,y,z)...)
-    $F(x::Real, y::Real, z::Robust32) = $F(promote(x,y,z)...)
+    $F(x::Robust32, y::Robust32, z::T) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::T, y::Robust32, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::Robust32, y::T, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::Robust32, y::T, z::T) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::T, y::Robust32, z::T) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::T, y::T, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
   end  
 end
 
@@ -283,14 +286,17 @@ for F in (:modf, :sincos, :sincosd) # , :sincospi)
          end
 end
 
-fma(x::Robust32, y::Robust32, z::Robust32) = Rob32(fma(value64(x), value64(y), value64(z)))
-fma(x::Robust32, y::Real, z::Real) = fma(promote(x,y,z)...)
-fma(x::Real, y::Robust32, z::Real) = fma(promote(x,y,z)...)
-fma(x::Real, y::Real, z::Robust32) = fma(promote(x,y,z)...)
-muladd(x::Robust32, y::Robust32, z::Robust32) = Rob32(muladd(value64(x), value64(y), value64(z)))
-muladd(x::Robust32, y::Real, z::Real) = muladd(promote(x,y,z)...)
-muladd(x::Real, y::Robust32, z::Real) = muladd(promote(x,y,z)...)
-muladd(x::Real, y::Real, z::Robust32) = muladd(promote(x,y,z)...)
+for F in (:fma, :muladd)
+  @eval begin
+    $F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
+    $F(x::Robust32, y::Robust32, z::T) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::T, y::Robust32, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::Robust32, y::T, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::Robust32, y::T, z::T) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::T, y::Robust32, z::T) where {T<:Real} = $F(promote(x,y,z)...)
+    $F(x::T, y::T, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
+  end  
+end
 
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
     Rob32(evalpoly(value64(x), map(value64, p)))
