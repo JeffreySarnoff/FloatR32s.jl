@@ -22,7 +22,7 @@ module Robust32s
 export Robust32, ComplexR32
 
 import Base: convert, promote_rule, show, string,
-             Float64, Float32, Float16,
+             Float64, Float32, Float16, prevfloat, nextfloat,
              ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^, fma, muladd,
              signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
@@ -154,6 +154,9 @@ zero(x::Robust32) = zero(Robust32)
 one(x::Robust32) = one(Robust32)
 two(x::Robust32) = two(Robust32)
 
+nextfloat(x::Robust32, n::Int=1) = Rob32(nextfloat(value64(x),n))
+prevfloat(x::Robust32, n::Int=1) = Rob32(prevfloat(value64(x),n))
+
 #=
    >>> Important Implementation Note <<<
 
@@ -228,6 +231,10 @@ for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
     $F(x::Real, y::Robust32) = $F(promote(x,y)...)
   end  
 end
+
+^(x::Robust32, y::Robust32) = Rob32(value64(x)^value64(y))
+^(x::Robust32, y::Integer) = Rob32(value64(x)^y)
+^(x::Real, y::Robust32) = Rob32(Float64(x^value64(y)))
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld)
