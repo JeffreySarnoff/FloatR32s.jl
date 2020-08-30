@@ -132,7 +132,9 @@ for F in (:floatmin, :floatmax, :maxintfloat, :typemax, :typemin)
   @eval $F(::Type{Robust32}) = Robust32($F(Float32))
 end
 
-eps(x::Robust32) = eps(value32(x))
+eps(::Type{Robust32}) = Robust32(eps(Float32))
+eps(x::Robust32) = Robust32(eps(value32(x)))
+
 significand(x::Robust32) = significand(value32(x))
 exponent(x::Robust32) = exponent(value32(x))
 sign(x::Robust32) = exponent(value32(x))
