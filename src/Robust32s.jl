@@ -244,7 +244,7 @@ end
 # fldmod(x,y) = divrem(x, y, RoundDown)
 divrem(x::Robust32, y::Robust32) = Rob32(divrem(value64(x), value64(y), RoundToZero))
 divrem(x::Robust32, y::Float64) = Rob32(divrem(value64(x), y, RoundToZero))
-divrem(x::Robust32, y::Real) = Rob32(divrem(value64(x), Float64(y), RoundToZero))
+divrem(x::Robust32, y::T) where {T<:Real} = Rob32(divrem(value64(x), Float64(y), RoundToZero))
 divrem(x::Float64, y::Robust32) = Rob32(divrem(x, value64(y), RoundToZero))
 divrem(x::Real, y::Robust32) = Rob32(divrem(Float64(x), value64(y), RoundToZero))
 
