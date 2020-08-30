@@ -249,7 +249,6 @@ divrem(x::Float64, y::Robust32) = Rob32(divrem(x, value64(y), RoundToZero))
 divrem(x::Float32, y::Robust32) = Rob32(divrem(Float64(x), value64(y), RoundToZero))
 
 fldmod(x::Robust32, y::Robust32) = Rob32(fldmod(value64(x), value64(y), RoundDown))
-fldmod(x::Robust32, y::Robust32) = Rob32(fldmod(value64(x), value64(y), RoundDown))
 fldmod(x::Robust32, y::Float64) = Rob32(fldmod(value64(x), y, RoundDown))
 fldmod(x::Robust32, y::Float32) = Rob32(fldmod(value64(x), Float64(y), RoundDown))
 fldmod(x::Float64, y::Robust32) = Rob32(fldmod(x, value64(y), RoundDown))
