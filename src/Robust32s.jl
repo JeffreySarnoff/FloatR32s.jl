@@ -266,7 +266,7 @@ fldmod(x::Real, y::Robust32) = Rob32(fldmod(Float64(x), value64(y), RoundDown))
 
 for F in (:hypot, :clamp)
   @eval begin
-    $F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value(x), value(y), value(z)))
+    $F(x::Robust32, y::Robust32, z::Robust32) = Robust32($F(value64(x), value64(y), value64(z)))
     $F(x::Robust32, y::Robust32, z::T) where {T<:Real} = $F(promote(x,y,z)...)
     $F(x::T, y::Robust32, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
     $F(x::Robust32, y::T, z::Robust32) where {T<:Real} = $F(promote(x,y,z)...)
