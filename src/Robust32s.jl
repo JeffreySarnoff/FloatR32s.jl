@@ -137,7 +137,8 @@ eps(x::Robust32) = Robust32(eps(value32(x)))
 
 significand(x::Robust32) = significand(value32(x))
 exponent(x::Robust32) = exponent(value32(x))
-sign(x::Robust32) = exponent(value32(x))
+sign(x::Robust32) = sign(value32(x))
+
 iszero(x::Robust32) = iszero(value32(x))
 isone(x::Robust32) = isone(value32(x))
 isfinite(x::Robust32) = isfinite(value32(x))
