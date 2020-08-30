@@ -1,3 +1,5 @@
+# adapted from Julia source
+
 macro roundsig(source, sigdigs, target)
   :(streq( round(Robust32($source), sigdigits=$sigdigs), Robust32($target) ))
 end
