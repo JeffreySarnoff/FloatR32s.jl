@@ -228,8 +228,14 @@ end
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   @eval begin
     $F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
-    $F(x::Robust32, y::Real) = $F(promote(x,y)...)
-    $F(x::Real, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Float64) = $F(value32(x), y)
+    $F(x::Robust32, y::Float32) = $F(value32(x), y)
+    $F(x::Float64, y::Robust32) = $F(x, value32(y))
+    $F(x::Float32, y::Robust32) = $F(x, value32(y))
+    $F(x::AbstractFloat, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::AbstractFloat) = $F(promote(x,y)...)
+    $F(x::Rational, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Rational) = $F(promote(x,y)...)
   end  
 end
 
