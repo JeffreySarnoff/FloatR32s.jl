@@ -43,18 +43,24 @@ using LinearAlgebra
 # using Gaius
 
 struct As64 end # internal use only
+struct As32 end # internal use only
 
-struct Robust32 <: AbstractFloat
-    val::Float64
-  
-    Robust32(x::Float64) = new(Float64(Float32(x)))
-    Robust32(::Type{As64}, x::Float64) = new(x)
-end
+primitive type Robust32 <: AbstractFloat 64 end
+
+Base.Float64(x::Robust32) = reinterpret(Float64, x)
+Base.Float32(x::Robust32) = Float32(reinterpret(Float64, x))
+Robust32(x::Float64) = reinterpret(Robust32, x)
+Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
+
+Robust32(::Type{As64}, x::Float64) = reinterpret(Robust32, x)
+Robust32(::Type{As32}, x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
+Robust32(::Type{As64}, x::Float32) = reinterpret(Robust32, Float64(x))
+Robust32(::Type{As32}, x::Float32) = reinterpret(Robust32, Float64(x))
 
 Robust32(x::Robust32) = x # idempotency
 
-value64(x::Robust32) = x.val
-value32(x::Robust32) = Float32(x.val)
+value64(x::Robust32) = reinterpret(Float64, x)
+value32(x::Robust32) = Float32(reinterpret(Float64,x))
 
 const ComplexR32 = Complex{Robust32}
 
