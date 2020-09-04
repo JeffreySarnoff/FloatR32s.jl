@@ -47,8 +47,8 @@ struct As32 end # internal use only
 
 primitive type Robust32 <: AbstractFloat 64 end
 
-Base.Float64(x::Robust32) = reinterpret(Float64, x)
-Base.Float32(x::Robust32) = Float32(reinterpret(Float64, x))
+Float64(x::Robust32) = reinterpret(Float64, x)
+Float32(x::Robust32) = Float32(reinterpret(Float64, x))
 Robust32(x::Float64) = reinterpret(Robust32, x)
 Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
 
@@ -80,14 +80,14 @@ Rob32(x::Float16) = Rob32(Meta.parse(string(x)))
 # process `divrem`, `fldmod` automatically 
 Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
 
-Float64(x::Robust32) = Float64(value32(x))
+# Float64(x::Robust32) = Float64(value32(x))
 convert(::Type{Float64}, x::Robust32) = Float64(x)
 promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
 convert(::Type{Robust32}, x::Float64) = Rob32(x)
 # Robust32(x::Float64) defined as an internal constructor
 
-Float32(x::Robust32) = value32(x)
-Robust32(x::Float32) = Rob32(Float64(x))
+# Float32(x::Robust32) = value32(x)
+# Robust32(x::Float32) = Rob32(Float64(x))
 convert(::Type{Float32}, x::Robust32) = Float32(x)
 promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
 convert(::Type{Robust32}, x::Float32) = Robust32(x)
