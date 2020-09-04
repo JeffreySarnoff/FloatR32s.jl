@@ -257,6 +257,10 @@ for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
     $F(x::Float32, y::Robust32) = $F(Rob32(x), y)
     $F(x::Robust32, y::Float16) = $F(x, Rob32(y))
     $F(x::Float16, y::Robust32) = $F(Rob32(x), y)
+    $F(x::AbstractFloat, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::AbstractFloat) = $F(promote(x,y)...)
+    $F(x::Rational, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Rational) = $F(promote(x,y)...)
     $F(x::Robust32, y::T) where {T<:Real} = $F(x, Rob32(y))
     $F(x::T, y::Robust32) where {T<:Real} = $F(Rob32(x), y)
   end  
