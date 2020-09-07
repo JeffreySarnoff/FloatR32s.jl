@@ -78,13 +78,12 @@ ComplexR32(x::ComplexF32) = ComplexR32(rob64(x.re), rob64(x.im))
 
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
-
+#=
 rob64(x::ComplexF64) = 
 rob32(x::ComplexF64) = 
 rob64(x::ComplexF32) = 
 rob32(x::ComplexF32) = 
-rob64(x::Float64) = reinterpret(Robust32, x)
-rob32(x::Float32) = reinterpret(Robust32, Float64(x))
+=#
 
 show(io::IO, x::Robust32) = show(io, value32(x))
 string(x::Robust32) = string(value32(x))
