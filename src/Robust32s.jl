@@ -63,6 +63,10 @@ value64(x::Robust32) = reinterpret(Float64, x)
 value32(x::Robust32) = Float32(reinterpret(Float64,x))
 
 const ComplexR32 = Complex{Robust32}
+Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) = ComplexF64(reinterpret(Float64,x.re), reinterpret(Float64,x.im))
+Base.reinterpret(::Type{ComplexR32}, x::ComplexF64) = ComplexR64(Rob32(x.re), Rob32(x.im))
+Base.ComplexF64(x::ComplexR32) = reinterpret(ComplexF64, x)
+Base.ComplexR32(x::ComplexF64) = reinterpret(ComplexR32, x)
 
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
@@ -385,5 +389,6 @@ end
 
 include("randnums.jl")
 include("linearalgebra.jl")
-  
+include("specialfuncs.jl")
+
 end  # Robust32s
