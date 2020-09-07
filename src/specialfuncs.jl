@@ -39,4 +39,4 @@ for F in (:airyaiprime, :airyaiprimex, :airyaix, :airybi,
           :dawson, :erf, :erfc, :erfcx, :erfi, 
           :gamma, :loggamma)
   @eval SF.$F(x::ComplexR32) = ComplexR32(SF.$F(ComplexF64(x)))
-
+end
