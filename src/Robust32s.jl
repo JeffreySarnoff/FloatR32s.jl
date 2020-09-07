@@ -233,15 +233,17 @@ end
 
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   @eval begin
-    $F(x::Robust32, y::Robust32) = $F(value32(x), value32(y))
-    $F(x::Robust32, y::Float64) = $F(value32(x), y)
-    $F(x::Robust32, y::Float32) = $F(value32(x), y)
-    $F(x::Float64, y::Robust32) = $F(x, value32(y))
-    $F(x::Float32, y::Robust32) = $F(x, value32(y))
+    $F(x::Robust32, y::Robust32) = $F(value64(x), value64(y))
+    $F(x::Robust32, y::Float64) = $F(value64(x), y)
+    $F(x::Robust32, y::Float32) = $F(value64(x), y)
+    $F(x::Float64, y::Robust32) = $F(x, value64(y))
+    $F(x::Float32, y::Robust32) = $F(x, value64(y))
     $F(x::AbstractFloat, y::Robust32) = $F(promote(x,y)...)
     $F(x::Robust32, y::AbstractFloat) = $F(promote(x,y)...)
-    $F(x::Rational, y::Robust32) = $F(promote(x,y)...)
-    $F(x::Robust32, y::Rational) = $F(promote(x,y)...)
+    $F(x::Rational, y::Robust32) = $F(x, value64(y))
+    $F(x::Robust32, y::Rational) = $F(value64(x), y)
+    $F(x::Bool, y::Robust32) = $F(x, value64(y))
+    $F(x::Robust32, y::Bool) = $F(value64(x), y)
   end  
 end
 
@@ -253,10 +255,12 @@ for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld)
   @eval begin
     $F(x::Robust32, y::Robust32) = Rob32($F(value64(x), value64(y)))
-    $F(x::Robust32, y::Float32) = $F(x, Rob32(y))
-    $F(x::Float32, y::Robust32) = $F(Rob32(x), y)
-    $F(x::Robust32, y::Float16) = $F(x, Rob32(y))
-    $F(x::Float16, y::Robust32) = $F(Rob32(x), y)
+    $F(x::Robust32, y::Float32) = Rob32($F(value64(x), y))
+    $F(x::Float32, y::Robust32) = Rob32($F(x, value64(y)))
+    $F(x::Robust32, y::Float16) = Rob32($F(value64(x), Float64(y))
+    $F(x::Float16, y::Robust32) = Rob32($F(Float64(x), value64(y))
+    $F(x::Bool, y::Robust32) = Rob32($F(x, value64(y)))
+    $F(x::Robust32, y::Bool) = Rob32($F(value64(x), y))
     $F(x::AbstractFloat, y::Robust32) = $F(promote(x,y)...)
     $F(x::Robust32, y::AbstractFloat) = $F(promote(x,y)...)
     $F(x::Rational, y::Robust32) = $F(promote(x,y)...)
