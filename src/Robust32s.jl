@@ -47,29 +47,44 @@ struct As32 end # internal use only
 
 primitive type Robust32 <: AbstractFloat 64 end
 
-Float64(x::Robust32) = reinterpret(Float64, x)
-Float32(x::Robust32) = Float32(reinterpret(Float64, x))
-Robust32(x::Float64) = reinterpret(Robust32, x)
-Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
+Robust32(x::Robust32) = x # idempotency
+
+value64(x::Robust32) = reinterpret(Float64, x)
+value32(x::Robust32) = Float32(reinterpret(Float64,x))
+
+rob64(x::Float64) = reinterpret(Robust32, x)
+rob32(x::Float32) = reinterpret(Robust32, Float64(x))
+rob64(x::Float32) = reinterpret(Robust32, Float64(x))
+rob32(x::Float64) = reinterpret(Robust32, Float32(x))
+
+Float64(x::Robust32) = value64(x)
+Float32(x::Robust32) = value32(x)
+
+Robust32(x::Float64) = rob64(x)
+Robust32(x::Float32) = rob32(x)
 
 Robust32(::Type{As64}, x::Float64) = reinterpret(Robust32, x)
 Robust32(::Type{As32}, x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
 Robust32(::Type{As64}, x::Float32) = reinterpret(Robust32, Float64(x))
 Robust32(::Type{As32}, x::Float32) = reinterpret(Robust32, Float64(x))
 
-Robust32(x::Robust32) = x # idempotency
-
-value64(x::Robust32) = reinterpret(Float64, x)
-value32(x::Robust32) = Float32(reinterpret(Float64,x))
-
 const ComplexR32 = Complex{Robust32}
-Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) = ComplexF64(reinterpret(Float64,x.re), reinterpret(Float64,x.im))
-Base.reinterpret(::Type{ComplexR32}, x::ComplexF64) = ComplexR64(Rob32(x.re), Rob32(x.im))
+Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
+Base.reinterpret(::Type{ComplexR32}, x::ComplexF64) = ComplexR32(rob64(x.re), rob64(x.im))
 Base.ComplexF64(x::ComplexR32) = reinterpret(ComplexF64, x)
-Base.ComplexR32(x::ComplexF64) = reinterpret(ComplexR32, x)
+ComplexR32(x::ComplexF64) = reinterpret(ComplexR32, x)
+Base.ComplexF32(x::ComplexR32) = ComplexF32(value32(x.re), value32(x.im))
+ComplexR32(x::ComplexF32) = ComplexR32(rob64(x.re), rob64(x.im))
 
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
+
+rob64(x::ComplexF64) = 
+rob32(x::ComplexF64) = 
+rob64(x::ComplexF32) = 
+rob32(x::ComplexF32) = 
+rob64(x::Float64) = reinterpret(Robust32, x)
+rob32(x::Float32) = reinterpret(Robust32, Float64(x))
 
 show(io::IO, x::Robust32) = show(io, value32(x))
 string(x::Robust32) = string(value32(x))
