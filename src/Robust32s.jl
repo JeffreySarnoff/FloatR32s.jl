@@ -55,8 +55,8 @@ Float32(x::Robust32) = Float32(reinterpret(Float64,x))
 Robust32(x::Float64) = reinterpret(Robust32, x)
 Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
 
-ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64. x.im))
-ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64.x.im))
+ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
+ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
 ComplexR32(x::ComplexF64) = ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
 ComplexR32(x::ComplexF32) = ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
 
@@ -89,6 +89,9 @@ Base.convert(::Type{ComplexF32}, x::ComplexR32) =
 
 show(io::IO, x::Robust32) = print(io, Float32(x))
 string(x::Robust32) = string(Float32(x))
+
+show(io::IO, x::ComplexR32) = print(io, ComplexF32(x))
+string(x::ComplexR32) = string(ComplexF32(x))
 
 # internal use only
 # >>>> Robust32(x::Float32) = Rob32(Meta.parse(string(x)))
