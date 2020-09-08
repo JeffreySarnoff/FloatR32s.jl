@@ -94,14 +94,14 @@ show(io::IO, x::Robust32) = show(io, value32(x))
 string(x::Robust32) = string(value32(x))
 
 # internal use only
-Rob32(x::Real) = Robust32(As64, Float64(x))
-Rob32(x::Float64) = Robust32(As64, x)
+# Rob32(x::Real) = Robust32(As64, Float64(x))
+# Rob32(x::Float64) = Robust32(As64, x)
 Rob32(x::Robust32) = x
 Rob32(x::Float32) = Rob32(Meta.parse(string(x)))
 Rob32(x::Float16) = Rob32(Meta.parse(string(x)))
 
 # process `divrem`, `fldmod` automatically 
-Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
+# >>>>>>>>> Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
 
 # Float64(x::Robust32) = Float64(value32(x))
 convert(::Type{Float64}, x::Robust32) = Float64(x)
