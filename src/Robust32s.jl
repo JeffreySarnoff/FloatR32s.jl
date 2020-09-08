@@ -89,16 +89,16 @@ float32(x::Float64)   = Float32(x)
    `complexf32` is used to map output, ComplexR32 values into ComplexF32s
    `complexf64` is used to map output, ComplexR32 values into ComplexF64s
 =#
-complexR32(x::ComplexF64) =
+complexr32(x::ComplexF64) =
     ComplexR32(convert(Robust32, x.re), convert(Robust32, x.im))
-complexR32(x::ComplexF32) =
+complexr32(x::ComplexF32) =
     ComplexR32(convert(Robust32, x.re), convert(Robust32, x.im))
-complexF64(x::ComplexR32) =
+complexf64(x::ComplexR32) =
     ComplexF64(convert(Float64, x.re), convert(Float64, x.im))
-complexF32(x::ComplexR32) =
+complexf32(x::ComplexR32) =
     ComplexF32(convert(Float32, x.re), convert(Float32, x.im))
 
-# internal (64bit) conversion
+# internal (64bit) conversion for Float64, Float32, Robust32
 convert(::Type{Robust32}, x::Float64) = reinterpret(Robust32, x)
 convert(::Type{Robust32}, x::Float32) = reinterpret(Robust32, Float64(x))
 convert(::Type{Float64}, x::Robust32) = reinterpret(Float64, x)
@@ -107,7 +107,7 @@ convert(::Type{Float32}, x::Robust32) = Float32(reinterpret(Float64, x))
 promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
 promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
 
-# internal (64bit) conversion
+# internal (64bit) conversion for ComplexF64, ComplexF32, ComplexR32
 convert(::Type{ComplexR32}, x::ComplexF64) =
     ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
 convert(::Type{ComplexR32}, x::ComplexF32) =
