@@ -42,9 +42,6 @@ using Random
 using LinearAlgebra
 # using Gaius
 
-struct As64 end # internal use only
-struct As32 end # internal use only
-
 primitive type Robust32 <: AbstractFloat 64 end
 const ComplexR32 = Complex{Robust32}
 
