@@ -32,7 +32,7 @@ import Base: convert, promote_rule, show, string,
              floor, ceil, trunc, round,
              rand, randn, evalpoly,
              sum, prod, cumsum, cumprod, accumulate, sum!, prod!, cumsum!, cumprod!, accumulate!
-             
+
 import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth, acsc, acscd, acsch, asec, asecd, asech, 
                   asin, asind, asinh, atan, atand, atanh, cos, cosc, cosd, cosh, cospi, cot, cotd, coth,
                   csc, cscd, csch, deg2rad, evalpoly, exp, exp10, exp2, expm1,
@@ -58,7 +58,8 @@ Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
 ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
 ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
 ComplexR32(x::ComplexF64) = ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
-ComplexR32(x::ComplexF32) = ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
+ComplexR32(x::ComplexF32) = 
+    ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
 
 #=
    `convert` is used to map input Float64 [Float32] values into Robust32s
@@ -68,7 +69,7 @@ Base.convert(::Type{Robust32}, x::Float64) = reinterpret(Robust32, Float64(Float
 Base.convert(::Type{Robust32}, x::Float32) = reinterpret(Robust32, Float64(x))
 Base.convert(::Type{Float64}, x::Robust32) = Float64(Float32(reinterpret(Float64, x)))
 Base.convert(::Type{Float32}, x::Robust32) = Float32(reinterpret(Float64, x))
-
+# As `convert` is used in a special way, we need to explicate `promote` so it works internally.
 Base.promote(x::Robust32, y::Float64) = (x, Robust32(y))
 Base.promote(x::Float64, y::Robust32) = (Robust32(x), y)
 Base.promote(x::Robust32, y::Float32) = (x, Robust32(y))
@@ -86,6 +87,11 @@ Base.convert(::Type{ComplexF64}, x::ComplexR32) =
     ComplexF64(convert(Float64, x.re), convert(Float64, x.im))
 Base.convert(::Type{ComplexF32}, x::ComplexR32) =
     ComplexF32(convert(Float32, x.re), convert(Float32, x.im))
+# As `convert` is used in a special way, we need to explicate `promote` so it works internally.
+Base.promote(x::ComplexR32, y::ComplexF64) = (x, ComplexR32(y))
+Base.promote(x::ComplexF64, y::ComplexR32) = (ComplexR32(x), y)
+Base.promote(x::ComplexR32, y::ComplexF32) = (x, ComplexR32(y))
+Base.promote(x::ComplexF32, y::ComplexR32) = (ComplexR32(x), y)
 
 show(io::IO, x::Robust32) = print(io, Float32(x))
 string(x::Robust32) = string(Float32(x))
