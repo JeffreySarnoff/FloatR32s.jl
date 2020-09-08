@@ -22,11 +22,11 @@ module Robust32s
 export Robust32, ComplexR32
 
 import Base: convert, promote_rule, show, string,
-             Float64, Float32, Float16, prevfloat, nextfloat,
+             Float64, Float32, Float16, float, prevfloat, nextfloat,
              ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^, fma, muladd,
              signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
-             isfinite, issubnormal, isinf, isnan, float, floatmin, floatmax, maxintfloat, typemax, typemin,
+             isfinite, issubnormal, isinf, isnan, floatmin, floatmax, maxintfloat, typemax, typemin,
              mod, rem, div, fld, cld, divrem, fldmod,
              floor, ceil, trunc, round,
              rand, randn, evalpoly,
@@ -52,8 +52,10 @@ const ComplexR32 = Complex{Robust32}
 Robust32(x::Robust32) = x
 ComplexR32(x::ComplexR32) = x
 
-value64(x::Robust32) = reinterpret(Float64, x)
-value32(x::Robust32) = Float32(reinterpret(Float64,x))
+Float64(x::Robust32) = reinterpret(Float64, x)
+Float32(x::Robust32) = Float32(reinterpret(Float64,x))
+
+Robust32(x::Float64) = reinterpret(Robust32, x)
 
 rob64(x::Float64) = reinterpret(Robust32, x)
 rob32(x::Float32) = reinterpret(Robust32, Float64(x))
@@ -81,6 +83,7 @@ ComplexR32(x::ComplexF32) = ComplexR32(rob64(x.re), rob64(x.im))
 
 value64(x::ComplexR32) = (value64(x.re), value64(x.im))
 value32(x::ComplexR32) = (value32(x.re), value32(x.im))
+
 #=
 rob64(x::ComplexF64) = 
 rob32(x::ComplexF64) = 
