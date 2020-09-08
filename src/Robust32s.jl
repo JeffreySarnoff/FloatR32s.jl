@@ -65,10 +65,12 @@ Float32(x::Robust32) = value32(x)
 Robust32(x::Float64) = rob64(x)
 Robust32(x::Float32) = rob32(x)
 
+#=
 Robust32(::Type{As64}, x::Float64) = reinterpret(Robust32, x)
 Robust32(::Type{As32}, x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
 Robust32(::Type{As64}, x::Float32) = reinterpret(Robust32, Float64(x))
 Robust32(::Type{As32}, x::Float32) = reinterpret(Robust32, Float64(x))
+=#
 
 const ComplexR32 = Complex{Robust32}
 Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
