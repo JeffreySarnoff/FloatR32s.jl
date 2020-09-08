@@ -112,13 +112,13 @@ promote_rule(::Type{ComplexR32}, ::Type{ComplexF64}) = ComplexR32
 promote_rule(::Type{ComplexR32}, ::Type{ComplexF32}) = ComplexR32
 
 string(x::Robust32) = string(float32(x))
-string(x::ComplexR32) = string(complexF32(x))
+string(x::ComplexR32) = string(complexf32(x))
 
 show(io::IO, x::Robust32) = print(io, float32(x))
-show(io::IO, x::ComplexR32) = print(io, complexF32(x))
+show(io::IO, x::ComplexR32) = print(io, complexf32(x))
 
 # internal use only
-# >>>> Robust32(x::Float32) = Rob32(Meta.parse(string(x)))
+# >>>> R32(x::Float32) = Robust32(Meta.parse(string(x)))
 
 # process `divrem`, `fldmod` automatically 
 # >>>>>>>>> Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
