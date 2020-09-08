@@ -22,7 +22,7 @@ module Robust32s
 export Robust32, ComplexR32
 
 import Base: convert, promote_rule, show, string,
-             Float64, Float32, Float16, ComplexF64. ComplexF32, ComplexF16,
+             Float64, Float32, Float16, ComplexF64, ComplexF32, ComplexF16,
              float, prevfloat, nextfloat,
              ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^, fma, muladd,
              signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
