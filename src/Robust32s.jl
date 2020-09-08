@@ -73,7 +73,8 @@ ComplexR32(x::ComplexF32) =
 =#
 robust32(x::Float64)  = reinterpret(Robust32, Float64(Float32(x)))
 # `numeric=false` gives digit memetic representation of Float32 in Float64
-robust32(x::Float32; numeric::Bool=true) = numeric ? reinterpret(Robust32, Float64(x)) : Robust32(Meta.parse(string(x))
+robust32(x::Float32; numeric::Bool=true) =
+    numeric ? reinterpret(Robust32, Float64(x)) : Robust32(Meta.parse(string(x))
 robust32(x::Robust32) = x
 float64(x::Robust32)  = Float64(Float32(reinterpret(Float64, x)))
 float64(x::Float64)   = x
