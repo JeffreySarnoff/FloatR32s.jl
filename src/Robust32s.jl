@@ -14,7 +14,7 @@
 
 A module for robust Float32 computation.
 
-Exports: `Robust32`, `ComplexR32`
+Exports: `Robust32`, `ComplexR32`, `robust32`, `complexr32`, `float32`, `float64`
 """ Robust32s
 
 module Robust32s
@@ -111,11 +111,11 @@ convert(::Type{ComplexF32}, x::ComplexR32) =
 promote_rule(::Type{ComplexR32}, ::Type{ComplexF64}) = ComplexR32
 promote_rule(::Type{ComplexR32}, ::Type{ComplexF32}) = ComplexR32
 
-show(io::IO, x::Robust32) = print(io, Float32(x))
-string(x::Robust32) = string(Float32(x))
+string(x::Robust32) = string(float32(x))
+string(x::ComplexR32) = string(complexF32(x))
 
-show(io::IO, x::ComplexR32) = print(io, ComplexF32(x))
-string(x::ComplexR32) = string(ComplexF32(x))
+show(io::IO, x::Robust32) = print(io, float32(x))
+show(io::IO, x::ComplexR32) = print(io, complexF32(x))
 
 # internal use only
 # >>>> Robust32(x::Float32) = Rob32(Meta.parse(string(x)))
