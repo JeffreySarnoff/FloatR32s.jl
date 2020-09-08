@@ -46,8 +46,11 @@ struct As64 end # internal use only
 struct As32 end # internal use only
 
 primitive type Robust32 <: AbstractFloat 64 end
+const ComplexR32 = Complex{Robust32}
 
-Robust32(x::Robust32) = x # idempotency
+# idempotency
+Robust32(x::Robust32) = x
+ComplexR32(x::ComplexR32) = x
 
 value64(x::Robust32) = reinterpret(Float64, x)
 value32(x::Robust32) = Float32(reinterpret(Float64,x))
