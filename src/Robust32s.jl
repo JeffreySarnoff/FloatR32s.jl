@@ -19,7 +19,9 @@ Exports: `Robust32`, `ComplexR32`
 
 module Robust32s
 
-export Robust32, ComplexR32
+export Robust32, ComplexR32,
+       robust32, complexr32,
+       float64, float32
 
 import Base: convert, promote_rule, show, string,
              Float64, Float32, Float16, ComplexF64, ComplexF32, ComplexF16,
@@ -62,36 +64,52 @@ ComplexR32(x::ComplexF32) =
     ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
 
 #=
-   `convert` is used to map input Float64 [Float32] values into Robust32s
-                 and to map output Robust32 values into Float32s [Float64s]
+   `robust32` is used to map input,  Float64 values into Robust32s
+   `robust32` is used to map input,  Float32 values into Robust32s
+   `float32`  is used to map output, Robust32 values into Float32s
+   `float64`  is used to map output, Robust32 values into Float64s
 =#
-Base.convert(::Type{Robust32}, x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
-Base.convert(::Type{Robust32}, x::Float32) = reinterpret(Robust32, Float64(x))
-Base.convert(::Type{Float64}, x::Robust32) = Float64(Float32(reinterpret(Float64, x)))
-Base.convert(::Type{Float32}, x::Robust32) = Float32(reinterpret(Float64, x))
-# As `convert` is used in a special way, we need to explicate `promote` so it works internally.
-Base.promote(x::Robust32, y::Float64) = (x, Robust32(y))
-Base.promote(x::Float64, y::Robust32) = (Robust32(x), y)
-Base.promote(x::Robust32, y::Float32) = (x, Robust32(y))
-Base.promote(x::Float32, y::Robust32) = (Robust32(x), y)
+robust32(x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
+robust32(x::Float32) = reinterpret(Robust32, Float64(x))
+float64(x::Robust32) = Float64(Float32(reinterpret(Float64, x)))
+float32(x::Robust32) = Float32(reinterpret(Float64, x))
 
 #=
-   `convert` is used to map input ComplexF4 [ComplexF32] values into ComplexR32s
-                 and to map output ComplexR32 values into ComplexF32s [ComplexF64s]
+   `complexr32` is used to map input,  ComplexF64 values into ComplexR32s
+   `complexr32` is used to map input,  ComplexF32 values into ComplexR32s
+   `complexf32` is used to map output, ComplexR32 values into ComplexF32s
+   `complexf64` is used to map output, ComplexR32 values into ComplexF64s
 =#
-Base.convert(::Type{ComplexR32}, x::ComplexF64) =
+complexR32(x::ComplexF64) =
     ComplexR32(convert(Robust32, x.re), convert(Robust32, x.im))
-Base.convert(::Type{ComplexR32}, x::ComplexF32) =
+complexR32(x::ComplexF32) =
     ComplexR32(convert(Robust32, x.re), convert(Robust32, x.im))
-Base.convert(::Type{ComplexF64}, x::ComplexR32) =
+complexF64(x::ComplexR32) =
     ComplexF64(convert(Float64, x.re), convert(Float64, x.im))
-Base.convert(::Type{ComplexF32}, x::ComplexR32) =
+complexF32(x::ComplexR32) =
     ComplexF32(convert(Float32, x.re), convert(Float32, x.im))
-# As `convert` is used in a special way, we need to explicate `promote` so it works internally.
-Base.promote(x::ComplexR32, y::ComplexF64) = (x, ComplexR32(y))
-Base.promote(x::ComplexF64, y::ComplexR32) = (ComplexR32(x), y)
-Base.promote(x::ComplexR32, y::ComplexF32) = (x, ComplexR32(y))
-Base.promote(x::ComplexF32, y::ComplexR32) = (ComplexR32(x), y)
+
+# internal (64bit) conversion
+convert(::Type{Robust32}, x::Float64) = reinterpret(Robust32, x)
+convert(::Type{Robust32}, x::Float32) = reinterpret(Robust32, Float64(x))
+convert(::Type{Float64}, x::Robust32) = reinterpret(Float64, x)
+convert(::Type{Float32}, x::Robust32) = Float32(reinterpret(Float64, x))
+# internal promotion
+promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
+promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
+
+# internal (64bit) conversion
+convert(::Type{ComplexR32}, x::ComplexF64) =
+    ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
+convert(::Type{ComplexR32}, x::ComplexF32) =
+    ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
+convert(::Type{ComplexF64}, x::ComplexR32) =
+    ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
+convert(::Type{ComplexF32}, x::ComplexR32) =
+    ComplexF32(Float32(reinterpret(Float64, x.re)), Float32(reinterpret(Float64, x.im)))
+# internal promotion
+promote_rule(::Type{ComplexR32}, ::Type{ComplexF64}) = ComplexR32
+promote_rule(::Type{ComplexR32}, ::Type{ComplexF32}) = ComplexR32
 
 show(io::IO, x::Robust32) = print(io, Float32(x))
 string(x::Robust32) = string(Float32(x))
