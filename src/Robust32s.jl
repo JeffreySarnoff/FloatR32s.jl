@@ -22,7 +22,8 @@ module Robust32s
 export Robust32, ComplexR32
 
 import Base: convert, promote_rule, show, string,
-             Float64, Float32, Float16, float, prevfloat, nextfloat,
+             Float64, Float32, Float16, ComplexF64. ComplexF32, ComplexF16,
+             float, prevfloat, nextfloat,
              ==, !=, <, <=, >, >=, isless, isequal, +, -, *, \, /, ^, fma, muladd,
              signbit, precision, significand, exponent, sign, eps, inv, sqrt, cbrt, hypot, clamp, clamp!,
              min, max, minmax, frexp, ldexp, abs, copysign, flipsign, zero, one, iszero, isone,
@@ -67,6 +68,12 @@ Base.convert(::Type{Robust32}, x::Float64) = reinterpret(Robust32, Float64(Float
 Base.convert(::Type{Robust32}, x::Float32) = reinterpret(Robust32, Float64(x))
 Base.convert(::Type{Float64}, x::Robust32) = Float64(Float32(reinterpret(Float64, x)))
 Base.convert(::Type{Float32}, x::Robust32) = Float32(reinterpret(Float64, x))
+
+Base.promote(x::Robust32, y::Float64) = (x, Robust32(y))
+Base.promote(x::Float64, y::Robust32) = (Robust32(x), y)
+Base.promote(x::Robust32, y::Float32) = (x, Robust32(y))
+Base.promote(x::Float32, y::Robust32) = (Robust32(x), y)
+
 #=
    `convert` is used to map input ComplexF4 [ComplexF32] values into ComplexR32s
                  and to map output ComplexR32 values into ComplexF32s [ComplexF64s]
@@ -80,38 +87,26 @@ Base.convert(::Type{ComplexF64}, x::ComplexR32) =
 Base.convert(::Type{ComplexF32}, x::ComplexR32) =
     ComplexF32(convert(Float32, x.re), convert(Float32, x.im))
 
-Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) =
-    ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
-Base.reinterpret(::Type{ComplexR32}, x::ComplexF64) =
-    ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
-Base.reinterpret(::Type{ComplexF32}, x::ComplexR32) =
-    ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
-Base.reinterpret(::Type{ComplexR32}, x::ComplexF32) =
-    ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
-
-show(io::IO, x::Robust32) = show(io, value32(x))
-string(x::Robust32) = string(value32(x))
+show(io::IO, x::Robust32) = print(io, Float32(x))
+string(x::Robust32) = string(Float32(x))
 
 # internal use only
-# Rob32(x::Real) = Robust32(As64, Float64(x))
-# Rob32(x::Float64) = Robust32(As64, x)
 # >>>> Robust32(x::Float32) = Rob32(Meta.parse(string(x)))
-# Robust32(x::Float16) = Rob32(Meta.parse(string(x)))
 
 # process `divrem`, `fldmod` automatically 
 # >>>>>>>>> Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
 
 # Float64(x::Robust32) = Float64(value32(x))
-convert(::Type{Float64}, x::Robust32) = Float64(x)
+# convert(::Type{Float64}, x::Robust32) = Float64(x)
 promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
-convert(::Type{Robust32}, x::Float64) = Rob32(x)
+# convert(::Type{Robust32}, x::Float64) = Rob32(x)
 # Robust32(x::Float64) defined as an internal constructor
 
 # Float32(x::Robust32) = value32(x)
 # Robust32(x::Float32) = Rob32(Float64(x))
-convert(::Type{Float32}, x::Robust32) = Float32(x)
+# convert(::Type{Float32}, x::Robust32) = Float32(x)
 promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
-convert(::Type{Robust32}, x::Float32) = Robust32(x)
+# convert(::Type{Robust32}, x::Float32) = Robust32(x)
 
 for T in (:BigFloat, :Float16)
   @eval begin
