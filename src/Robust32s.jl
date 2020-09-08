@@ -56,6 +56,8 @@ Float64(x::Robust32) = reinterpret(Float64, x)
 Float32(x::Robust32) = Float32(reinterpret(Float64,x))
 Robust32(x::Float64) = reinterpret(Robust32, x)
 Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
+# process `divrem`, `fldmod` automatically 
+Robust32(x::Tuple{Float64, Float64}) = (Robust32(x[1]), Robust32(x[2]))
 
 ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
 ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
@@ -69,10 +71,16 @@ ComplexR32(x::ComplexF32) =
    `float32`  is used to map output, Robust32 values into Float32s
    `float64`  is used to map output, Robust32 values into Float64s
 =#
-robust32(x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
-robust32(x::Float32) = reinterpret(Robust32, Float64(x))
-float64(x::Robust32) = Float64(Float32(reinterpret(Float64, x)))
-float32(x::Robust32) = Float32(reinterpret(Float64, x))
+robust32(x::Float64)  = reinterpret(Robust32, Float64(Float32(x)))
+# `numeric=false` gives digit memetic representation of Float32 in Float64
+robust32(x::Float32; numeric::Bool=true) = numeric ? reinterpret(Robust32, Float64(x)) : Robust32(Meta.parse(string(x))
+robust32(x::Robust32) = x
+float64(x::Robust32)  = Float64(Float32(reinterpret(Float64, x)))
+float64(x::Float64)   = x
+float64(x::Float32)   = Float64(x)
+float32(x::Robust32)  = Float32(reinterpret(Float64, x))
+float32(x::Float32)   = x
+float32(x::Float64)   = Float32(x)
 
 #=
    `complexr32` is used to map input,  ComplexF64 values into ComplexR32s
@@ -116,24 +124,6 @@ string(x::ComplexR32) = string(complexf32(x))
 
 show(io::IO, x::Robust32) = print(io, float32(x))
 show(io::IO, x::ComplexR32) = print(io, complexf32(x))
-
-# internal use only
-# >>>> R32(x::Float32) = Robust32(Meta.parse(string(x)))
-
-# process `divrem`, `fldmod` automatically 
-# >>>>>>>>> Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
-
-# Float64(x::Robust32) = Float64(value32(x))
-# convert(::Type{Float64}, x::Robust32) = Float64(x)
-promote_rule(::Type{Robust32}, ::Type{Float64}) = Robust32
-# convert(::Type{Robust32}, x::Float64) = Rob32(x)
-# Robust32(x::Float64) defined as an internal constructor
-
-# Float32(x::Robust32) = value32(x)
-# Robust32(x::Float32) = Rob32(Float64(x))
-# convert(::Type{Float32}, x::Robust32) = Float32(x)
-promote_rule(::Type{Robust32}, ::Type{Float32}) = Robust32
-# convert(::Type{Robust32}, x::Float32) = Robust32(x)
 
 for T in (:BigFloat, :Float16)
   @eval begin
