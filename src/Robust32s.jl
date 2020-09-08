@@ -51,44 +51,43 @@ ComplexR32(x::ComplexR32) = x
 
 Float64(x::Robust32) = reinterpret(Float64, x)
 Float32(x::Robust32) = Float32(reinterpret(Float64,x))
-
 Robust32(x::Float64) = reinterpret(Robust32, x)
+Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
 
-rob64(x::Float64) = reinterpret(Robust32, x)
-rob32(x::Float32) = reinterpret(Robust32, Float64(x))
-rob64(x::Float32) = reinterpret(Robust32, Float64(x))
-rob32(x::Float64) = reinterpret(Robust32, Float32(x))
-
-Float64(x::Robust32) = value64(x)
-Float32(x::Robust32) = value32(x)
-
-Robust32(x::Float64) = rob64(x)
-Robust32(x::Float32) = rob32(x)
+ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64. x.im))
+ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64.x.im))
+ComplexR32(x::ComplexF64) = ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
+ComplexR32(x::ComplexF32) = ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
 
 #=
-Robust32(::Type{As64}, x::Float64) = reinterpret(Robust32, x)
-Robust32(::Type{As32}, x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
-Robust32(::Type{As64}, x::Float32) = reinterpret(Robust32, Float64(x))
-Robust32(::Type{As32}, x::Float32) = reinterpret(Robust32, Float64(x))
+   `convert` is used to map input Float64 [Float32] values into Robust32s
+                 and to map output Robust32 values into Float32s [Float64s]
 =#
-
-const ComplexR32 = Complex{Robust32}
-Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
-Base.reinterpret(::Type{ComplexR32}, x::ComplexF64) = ComplexR32(rob64(x.re), rob64(x.im))
-Base.ComplexF64(x::ComplexR32) = reinterpret(ComplexF64, x)
-ComplexR32(x::ComplexF64) = reinterpret(ComplexR32, x)
-Base.ComplexF32(x::ComplexR32) = ComplexF32(value32(x.re), value32(x.im))
-ComplexR32(x::ComplexF32) = ComplexR32(rob64(x.re), rob64(x.im))
-
-value64(x::ComplexR32) = (value64(x.re), value64(x.im))
-value32(x::ComplexR32) = (value32(x.re), value32(x.im))
-
+Base.convert(::Type{Robust32}, x::Float64) = reinterpret(Robust32, Float64(Float32(x)))
+Base.convert(::Type{Robust32}, x::Float32) = reinterpret(Robust32, Float64(x))
+Base.convert(::Type{Float64}, x::Robust32) = Float64(Float32(reinterpret(Float64, x)))
+Base.convert(::Type{Float32}, x::Robust32) = Float32(reinterpret(Float64, x))
 #=
-rob64(x::ComplexF64) = 
-rob32(x::ComplexF64) = 
-rob64(x::ComplexF32) = 
-rob32(x::ComplexF32) = 
+   `convert` is used to map input ComplexF4 [ComplexF32] values into ComplexR32s
+                 and to map output ComplexR32 values into ComplexF32s [ComplexF64s]
 =#
+Base.convert(::Type{ComplexR32}, x::ComplexF64) =
+    ComplexR32(convert(Robust32, x.re), convert(Robust32, x.im))
+Base.convert(::Type{ComplexR32}, x::ComplexF32) =
+    ComplexR32(convert(Robust32, x.re), convert(Robust32, x.im))
+Base.convert(::Type{ComplexF64}, x::ComplexR32) =
+    ComplexF64(convert(Float64, x.re), convert(Float64, x.im))
+Base.convert(::Type{ComplexF32}, x::ComplexR32) =
+    ComplexF32(convert(Float32, x.re), convert(Float32, x.im))
+
+Base.reinterpret(::Type{ComplexF64}, x::ComplexR32) =
+    ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
+Base.reinterpret(::Type{ComplexR32}, x::ComplexF64) =
+    ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
+Base.reinterpret(::Type{ComplexF32}, x::ComplexR32) =
+    ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64,x.im))
+Base.reinterpret(::Type{ComplexR32}, x::ComplexF32) =
+    ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
 
 show(io::IO, x::Robust32) = show(io, value32(x))
 string(x::Robust32) = string(value32(x))
@@ -96,9 +95,8 @@ string(x::Robust32) = string(value32(x))
 # internal use only
 # Rob32(x::Real) = Robust32(As64, Float64(x))
 # Rob32(x::Float64) = Robust32(As64, x)
-Rob32(x::Robust32) = x
-Rob32(x::Float32) = Rob32(Meta.parse(string(x)))
-Rob32(x::Float16) = Rob32(Meta.parse(string(x)))
+# >>>> Robust32(x::Float32) = Rob32(Meta.parse(string(x)))
+# Robust32(x::Float16) = Rob32(Meta.parse(string(x)))
 
 # process `divrem`, `fldmod` automatically 
 # >>>>>>>>> Rob32(x::Tuple{Float64,Float64}) = (Robust32(As64, x[1]), Robust32(As64, x[2]))
