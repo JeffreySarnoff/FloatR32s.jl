@@ -1,6 +1,7 @@
 import SpecialFunctions
 const SF = SpecialFunctions
 
+# functions of 1 argument returning a floating point Real value
 for F in (:besselj0, :besselj1, :bessely0, :bessely1, 
           :cosint, :dawson, :ellipe, :ellipk, 
           :erf, :erfc, :erfcinv, :erfcx, :erfi, :erfinv, 
@@ -9,6 +10,7 @@ for F in (:besselj0, :besselj1, :bessely0, :bessely1,
   @eval SF.$F(x::Robust32) = Robust32(SF.$F(Float64(x)))
 end
 
+# functions of 1 argument returning a floating point Complex value
 for F in (:airyaiprime, :airyaiprimex, :airyaix, :airybi, 
           :airybiprime, :airybiprimex, :airybix, 
           :besselj0, :besselj1, :bessely0, :bessely1, 
@@ -17,6 +19,7 @@ for F in (:airyaiprime, :airyaiprimex, :airyaix, :airybi,
   @eval SF.$F(x::ComplexR32) = ComplexR32(SF.$F(ComplexF64(x)))
 end
 
+# functions of 2 arguments returning a floating point Complex value
 for F in (:besseli, :besselix, :besselj, :besseljx,
           :besselk, :besselkx, :bessely, :besselyx)
   @eval begin
@@ -26,6 +29,7 @@ for F in (:besseli, :besselix, :besselj, :besseljx,
   end                             
 end
 
+# functions of 2 arguments returning a floating point 2-tuple value
 for F in (:besselj, :bessely)
   @eval begin
     SF.$F(x::Int32, y::Robust32) = Robust32(SF.$F(x, Float64(y)))
