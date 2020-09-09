@@ -72,6 +72,39 @@ for F in (:beta_inc)
   end
 end
 
+# functions of 4 arguments returning a value of Float type
+for F in (:ncbeta, :ncF)
+  @eval begin
+    SF.$F(a::Robust32, b::Robust32, c::Robust32, d::Robust32) =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32, b::T, c::T, d::T) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::T, b::Robust32, c::T, d::T) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::T, b::T, c::Robust32, d::T) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::T, b::T, c::T, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32, b::Robust32, c::T, d::T) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32 b::T, c::Robust32, d::T) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32 b::T, c::T, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::T b::Robust32, c::T, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::T b::T, c::Robust32, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32 b::Robust32, c::Robust32, d::T) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32 b::Robust32, c::T, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::Robust32 b::T, c::Robust32, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+    SF.$F(a::T, b::Robust32, c::Robust32, d::Robust32) where {T<:AbstractFloat} =
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
+end
+
 # functions of 4 arguments returning a value of NTuple{2,Float} type
 for F in (:beta_inc_inv,)
   @eval begin
@@ -88,21 +121,21 @@ for F in (:beta_inc_inv,)
     SF.$F(a::Robust32, b::Robust32, c::T, d::T) where {T<:AbstractFloat} =
       Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::Robust32 b::T, c::Robust32, d::T) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::Robust32 b::T, c::T, d::Robust32) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::T b::Robust32, c::T, d::Robust32) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::T b::T, c::Robust32, d::Robust32) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::Robust32 b::Robust32, c::Robust32, d::T) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::Robust32 b::Robust32, c::T, d::Robust32) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::Robust32 b::T, c::Robust32, d::Robust32) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
     SF.$F(a::T, b::Robust32, c::Robust32, d::Robust32) where {T<:AbstractFloat} =
-      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))                    
+      Robust32(SF.$F(Float64(a), Float64(b), Float64(c), Float64(d)))
   end
 end
 
