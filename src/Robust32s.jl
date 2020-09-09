@@ -56,7 +56,9 @@ using Random
 using LinearAlgebra
 # using Gaius
 
-primitive type Robust32 <: AbstractFloat 64 end
+abstract  type RobustFloat <: AbstractFloat  end
+primitive type Robust32    <: RobustFloat 64 end
+
 const ComplexR32 = Complex{Robust32}
 
 # idempotency
