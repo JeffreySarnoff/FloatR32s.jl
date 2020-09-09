@@ -20,9 +20,9 @@ end
 for F in (:besseli, :besselix, :besselj, :besselj, :besseljx,
           :besselk, :besselkx, :bessely, :bessely, :besselyx)
   @eval begin
-    SF.$F(x::Robust32, y::ComplexR64) = ComplexR32(SF.$F(Float64(x), ComplexF64(y)))
+    SF.$F(x::Robust32, y::ComplexR32) = ComplexR32(SF.$F(Float64(x), ComplexF64(y)))
     SF.$F(x::Robust32, y::ComplexF64) = ComplexR32(SF.$F(Float64(x), y))
-    SF.$F(x::Float64, y::ComplexR64) =  ComplexR32(SF.$F(x, ComplexF64(y)))                
+    SF.$F(x::Float64, y::ComplexR32) =  ComplexR32(SF.$F(x, ComplexF64(y)))                
   end                             
 end
 
