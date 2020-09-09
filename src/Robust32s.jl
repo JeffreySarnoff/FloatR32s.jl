@@ -58,10 +58,12 @@ import Base.Math: abs2, acos, acosd, acosh, acot, acotd, acoth,
 using Random
 using LinearAlgebra
 # using Gaius
+include("support.jl")
 
 abstract  type RobustFloat <: AbstractFloat  end
 primitive type Robust32    <: RobustFloat 64 end
 
+const MachFloats = Union{Float64, Float32}
 const FastFloats = Union{Float64, Float32, Robust32}
 const BinaryFloats = Union{filter(isconcretetype, tuple(subtypes(AbstractFloat)...))...}
 
