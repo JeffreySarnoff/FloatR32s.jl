@@ -313,9 +313,29 @@ end
 
 ^(x::Robust32, y::Robust32) = Robust32(Float64(x)^Float64(y))
 ^(x::Robust32, y::Integer) = Robust32(Float64(x)^y)
-^(x::Real, y::Robust32) = Robust32(Float64(x^Float64(y)))
+^(x::Integer, y::Robust32) = Robust32(x^Float64(y))
+^(x::Float64, y::Robust32) = Robust32(Float64(x^Float64(y)))
+^(x::Robust32, y::Float64) = Robust32(Float64(Float64(x)^y))
 
-for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
+for F in (:copysign, :flipsign)
+  @eval begin
+    $F(x::Robust32, y::Robust32) = Robust32($F(Float64(x), Float64(y)))
+    $F(x::Robust32, y::Float32) = Robust32($F(Float64(x), y))
+    $F(x::Float32, y::Robust32) = Robust32($F(x, Float64(y)))
+    $F(x::Robust32, y::Float16) = Robust32($F(Float64(x), Float64(y)))
+    $F(x::Float16, y::Robust32) = Robust32($F(Float64(x), Float64(y)))
+    $F(x::Bool, y::Robust32) = Robust32($F(x, Float64(y)))
+    $F(x::Robust32, y::Bool) = Robust32($F(Float64(x), y))
+    $F(x::Float64, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Float64) = $F(promote(x,y)...)
+    $F(x::Rational, y::Robust32) = $F(promote(x,y)...)
+    $F(x::Robust32, y::Rational) = $F(promote(x,y)...)
+    $F(x::Robust32, y::T) where {T<:AbstractFloat} = $F(x, Robust32(y))
+    $F(x::AbstractFloat, y::Robust32) = $F(Robust32(x), y)
+  end  
+end
+
+for F in (:+, :-, :*, :/, :\, :hypot,
           :mod, :rem, :div, :fld, :cld)
   @eval begin
     $F(x::Robust32, y::Robust32) = Robust32($F(Float64(x), Float64(y)))
@@ -413,10 +433,10 @@ end
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
     Robust32(evalpoly(Float64(x), map(Float64, p)))
 end
-function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
+function evalpoly(x::Float64, p::NTuple{N, Robust32}) where {N}
     Robust32(evalpoly(Float64(x), map(Float64, p)))
 end
-function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
+function evalpoly(x::Robust32, p::NTuple{N, Float64}) where {N}
     Robust32(evalpoly(Float64(x), p))
 end
 
