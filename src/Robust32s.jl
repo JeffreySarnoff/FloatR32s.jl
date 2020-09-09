@@ -65,7 +65,7 @@ primitive type Robust32    <: RobustFloat 64 end
 
 const MachFloats = Union{Float64, Float32}
 const FastFloats = Union{Float64, Float32, Robust32}
-const BinaryFloats = Union{filter(isconcretetype, tuple(subtypes(AbstractFloat)...))...}
+# const BinaryFloats = Union{filter(isconcretetype, tuple(InteractiveUtils.subtypes(AbstractFloat)...))...}
 
 const ComplexR32 = Complex{Robust32}
 
