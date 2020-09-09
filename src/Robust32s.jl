@@ -436,7 +436,7 @@ end
 function evalpoly(x::Float64, p::NTuple{N, Robust32}) where {N}
     Robust32(evalpoly(Float64(x), map(Float64, p)))
 end
-function evalpoly(x::Robust32, p::NTuple{N, Float64}) where {N}
+function evalpoly(x::Float32, p::NTuple{N, Robust32}) where {N}
     Robust32(evalpoly(Float64(x), p))
 end
 
