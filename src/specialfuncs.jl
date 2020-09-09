@@ -17,8 +17,8 @@ for F in (:airyaiprime, :airyaiprimex, :airyaix, :airybi,
   @eval SF.$F(x::ComplexR32) = ComplexR32(SF.$F(ComplexF64(x)))
 end
 
-for F in (:besseli, :besselix, :besselj, :besselj, :besseljx,
-          :besselk, :besselkx, :bessely, :bessely, :besselyx)
+for F in (:besseli, :besselix, :besselj, :besseljx,
+          :besselk, :besselkx, :bessely, :besselyx)
   @eval begin
     SF.$F(x::Robust32, y::ComplexR32) = ComplexR32(SF.$F(Float64(x), ComplexF64(y)))
     SF.$F(x::Robust32, y::ComplexF64) = ComplexR32(SF.$F(Float64(x), y))
