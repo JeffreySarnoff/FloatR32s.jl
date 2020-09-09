@@ -148,6 +148,11 @@ promote_rule(::Type{ComplexR32}, ::Type{ComplexF32}) = ComplexR32
 string(x::Robust32) = string(float32(x))
 string(x::ComplexR32) = string(complexf32(x))
 
+show(io::IO, ::MIME"text/plain", x::Robust32) =
+    print(io, Float32(x))
+show(io::IO, ::MIME"text/plain", x::ComplexR32) =
+    print(io, ComplexF32(x))
+
 show(io::IO, x::Robust32) = print(io, float32(x))
 show(io::IO, x::ComplexR32) = print(io, complexf32(x))
 
