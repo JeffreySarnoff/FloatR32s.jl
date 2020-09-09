@@ -67,8 +67,9 @@ Float64(x::Robust32) = reinterpret(Float64, x)
 Float32(x::Robust32) = Float32(reinterpret(Float64,x))
 Robust32(x::Float64) = reinterpret(Robust32, x)
 Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
-# process `divrem`, `fldmod` automatically 
+# process `divrem`, `fldmod`, some SpecialFunctions e.g (beta_inc, beta_inc_inv) automatically 
 Robust32(x::Tuple{Float64, Float64}) = (Robust32(x[1]), Robust32(x[2]))
+Robust32(x::Tuple{Float32, Float32}) = (Robust32(x[1]), Robust32(x[2]))
 
 ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
 ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
