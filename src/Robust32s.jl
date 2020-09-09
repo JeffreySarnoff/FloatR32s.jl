@@ -71,9 +71,12 @@ Robust32(x::Float32) = reinterpret(Robust32, Float64(x))
 Robust32(x::Tuple{Float64, Float64}) = (Robust32(x[1]), Robust32(x[2]))
 Robust32(x::Tuple{Float32, Float32}) = (Robust32(x[1]), Robust32(x[2]))
 
-ComplexF64(x::ComplexR32) = ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
-ComplexF32(x::ComplexR32) = ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
-ComplexR32(x::ComplexF64) = ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
+ComplexF64(x::ComplexR32) =
+    ComplexF64(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
+ComplexF32(x::ComplexR32) = 
+    ComplexF32(reinterpret(Float64, x.re), reinterpret(Float64, x.im))
+ComplexR32(x::ComplexF64) = 
+    ComplexR32(reinterpret(Robust32, x.re), reinterpret(Robust32, x.im))
 ComplexR32(x::ComplexF32) = 
     ComplexR32(reinterpret(Robust32, Float64(x.re)), reinterpret(Robust32, Float64(x.im)))
 
@@ -141,7 +144,7 @@ show(io::IO, x::ComplexR32) = print(io, complexf32(x))
 for T in (:BigFloat, :Float16)
   @eval begin
     Base.$T(x::Robust32) = $T(Float64(x))
-    Robust32(x::$T) = Rob32(Float64(x))
+    Robust32(x::$T) = Robust32(Float64(x))
     convert(::Type{$T}, x::Robust32) = $T(x)
     promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
     convert(::Type{Robust32}, x::$T) = Robust32(x)
@@ -152,7 +155,7 @@ for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8,
                    :UInt128, :UInt64, :UInt32, :UInt16, :UInt8)
   @eval begin
     Base.$T(x::Robust32) = $T(Float32(x))
-    Robust32(x::$T) = Rob32(Float64(Float32(x)))
+    Robust32(x::$T) = Robust32(Float64(Float32(x)))
     convert(::Type{$T}, x::Robust32) = $T(x)
     promote_rule(::Type{Robust32}, ::Type{$T}) = Robust32
     convert(::Type{Robust32}, x::$T) = Robust32(x)
@@ -164,7 +167,7 @@ convert(::Type{Rational}, x::Robust32) = convert(Rational{Int64}, x)
 promote_rule(::Type{Robust32}, ::Type{Rational}) = Robust32
 
 Robust32(x::T) where {T<:Irrational} = Robust32(Float64(x))
-convert(::Type{Robust32}, x::T) where {T<:Irrational} = Rob32(Float64(x))
+convert(::Type{Robust32}, x::T) where {T<:Irrational} = Robust32(Float64(x))
 promote_rule(::Type{Robust32}, ::Type{Irrational})  = Robust32
 
 const Robust32_0 = Robust32(0.0)
@@ -207,8 +210,8 @@ zero(x::Robust32) = zero(Robust32)
 one(x::Robust32) = one(Robust32)
 two(x::Robust32) = two(Robust32)
 
-nextfloat(x::Robust32, n::Int=1) = Rob32(nextfloat(Float64(x),n))
-prevfloat(x::Robust32, n::Int=1) = Rob32(prevfloat(Float64(x),n))
+nextfloat(x::Robust32, n::Int=1) = Robust32(nextfloat(Float64(x),n))
+prevfloat(x::Robust32, n::Int=1) = Robust32(prevfloat(Float64(x),n))
 
 #=
    >>> Important Implementation Note <<<
@@ -251,30 +254,30 @@ ldexp(fr::Robust32, xp::Int) = ldexp64(fr, xp)
 
 function frexp64(x::Robust32)
   fr64, xp = frexp(Float64(x))
-  fr = Rob32(fr64)
+  fr = Robust32(fr64)
   return (fr, xp)
 end
 
 function ldexp64(fr::Robust32, ex::Int)
   fr64 = Float64(fr)
-  return Rob32(ldexp(fr64, ex))
+  return Robust32(ldexp(fr64, ex))
 end
 ldexp64(x::Tuple{Robust32, Int}) = ldexp64(x[1], x[2])
 
 function frexp32(x::Robust32)
   fr64, xp = frexp(Float64(x))
-  fr = Rob32(fr64)
+  fr = Robust32(fr64)
   return (fr, xp)
 end
 
 function ldexp32(fr::Robust32, ex::Int)
   fr64 = Float64(fr)
-  return Rob32(ldexp(fr64, ex))
+  return Robust32(ldexp(fr64, ex))
 end
 ldexp32(x::Tuple{Robust32, Int}) = ldexp32(x[1], x[2])
 
 for F in (:-, :abs, :inv, :sqrt, :cbrt)
-  @eval $F(x::Robust32) = Rob32($F(Float64(x)))
+  @eval $F(x::Robust32) = Robust32($F(Float64(x)))
 end
 
 for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
@@ -293,42 +296,42 @@ for F in (:(==), :(!=), :(<), :(<=), :(>), :(>=), :isless, :isequal)
   end  
 end
 
-^(x::Robust32, y::Robust32) = Rob32(Float64(x)^Float64(y))
-^(x::Robust32, y::Integer) = Rob32(Float64(x)^y)
-^(x::Real, y::Robust32) = Rob32(Float64(x^Float64(y)))
+^(x::Robust32, y::Robust32) = Robust32(Float64(x)^Float64(y))
+^(x::Robust32, y::Integer) = Robust32(Float64(x)^y)
+^(x::Real, y::Robust32) = Robust32(Float64(x^Float64(y)))
 
 for F in (:+, :-, :*, :/, :\, :hypot, :copysign, :flipsign,
           :mod, :rem, :div, :fld, :cld)
   @eval begin
-    $F(x::Robust32, y::Robust32) = Rob32($F(Float64(x), Float64(y)))
-    $F(x::Robust32, y::Float32) = Rob32($F(Float64(x), y))
-    $F(x::Float32, y::Robust32) = Rob32($F(x, Float64(y)))
-    $F(x::Robust32, y::Float16) = Rob32($F(Float64(x), Float64(y)))
-    $F(x::Float16, y::Robust32) = Rob32($F(Float64(x), Float64(y)))
-    $F(x::Bool, y::Robust32) = Rob32($F(x, Float64(y)))
-    $F(x::Robust32, y::Bool) = Rob32($F(Float64(x), y))
+    $F(x::Robust32, y::Robust32) = Robust32($F(Float64(x), Float64(y)))
+    $F(x::Robust32, y::Float32) = Robust32($F(Float64(x), y))
+    $F(x::Float32, y::Robust32) = Robust32($F(x, Float64(y)))
+    $F(x::Robust32, y::Float16) = Robust32($F(Float64(x), Float64(y)))
+    $F(x::Float16, y::Robust32) = Robust32($F(Float64(x), Float64(y)))
+    $F(x::Bool, y::Robust32) = Robust32($F(x, Float64(y)))
+    $F(x::Robust32, y::Bool) = Robust32($F(Float64(x), y))
     $F(x::AbstractFloat, y::Robust32) = $F(promote(x,y)...)
     $F(x::Robust32, y::AbstractFloat) = $F(promote(x,y)...)
     $F(x::Rational, y::Robust32) = $F(promote(x,y)...)
     $F(x::Robust32, y::Rational) = $F(promote(x,y)...)
-    $F(x::Robust32, y::T) where {T<:Real} = $F(x, Rob32(y))
-    $F(x::T, y::Robust32) where {T<:Real} = $F(Rob32(x), y)
+    $F(x::Robust32, y::T) where {T<:Real} = $F(x, Robust32(y))
+    $F(x::T, y::Robust32) where {T<:Real} = $F(Robust32(x), y)
   end  
 end
 
 # divrem(x, y) = divrem(x, y, RoundToZero)
 # fldmod(x,y) = divrem(x, y, RoundDown)
-divrem(x::Robust32, y::Robust32) = Rob32(divrem(Float64(x), Float64(y), RoundToZero))
-divrem(x::Robust32, y::Float64) = Rob32(divrem(Float64(x), y, RoundToZero))
-divrem(x::Robust32, y::Float32) = Rob32(divrem(Float64(x), Float64(y), RoundToZero))
-divrem(x::Float64, y::Robust32) = Rob32(divrem(x, Float64(y), RoundToZero))
-divrem(x::Float32, y::Robust32) = Rob32(divrem(Float64(x), Float64(y), RoundToZero))
+divrem(x::Robust32, y::Robust32) = Robust32(divrem(Float64(x), Float64(y), RoundToZero))
+divrem(x::Robust32, y::Float64) = Robust32(divrem(Float64(x), y, RoundToZero))
+divrem(x::Robust32, y::Float32) = Robust32(divrem(Float64(x), Float64(y), RoundToZero))
+divrem(x::Float64, y::Robust32) = Robust32(divrem(x, Float64(y), RoundToZero))
+divrem(x::Float32, y::Robust32) = Robust32(divrem(Float64(x), Float64(y), RoundToZero))
 
-fldmod(x::Robust32, y::Robust32) = Rob32(fldmod(Float64(x), Float64(y), RoundDown))
-fldmod(x::Robust32, y::Float64) = Rob32(fldmod(Float64(x), y, RoundDown))
-fldmod(x::Robust32, y::Real) = Rob32(fldmod(Float64(x), Float64(y), RoundDown))
-fldmod(x::Float64, y::Robust32) = Rob32(fldmod(x, Float64(y), RoundDown))
-fldmod(x::Real, y::Robust32) = Rob32(fldmod(Float64(x), Float64(y), RoundDown))
+fldmod(x::Robust32, y::Robust32) = Robust32(fldmod(Float64(x), Float64(y), RoundDown))
+fldmod(x::Robust32, y::Float64) = Robust32(fldmod(Float64(x), y, RoundDown))
+fldmod(x::Robust32, y::Real) = Robust32(fldmod(Float64(x), Float64(y), RoundDown))
+fldmod(x::Float64, y::Robust32) = Robust32(fldmod(x, Float64(y), RoundDown))
+fldmod(x::Real, y::Robust32) = Robust32(fldmod(Float64(x), Float64(y), RoundDown))
  
 
 for F in (:hypot, :clamp)
@@ -344,14 +347,14 @@ for F in (:hypot, :clamp)
 end
 
 for F in (:floor, :ceil, :trunc)
-  @eval Base.$F(x::Robust32) = Rob32($F(Float64(x)))
+  @eval Base.$F(x::Robust32) = Robust32($F(Float64(x)))
     for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
       @eval Base.$F(::Type{$T}, x::Robust32) = $T(Float32($F(Float64(x))))
     end  
 end
 
 Base.round(x::Robust32; digits=0, sigdigits=0, base=10) = 
-    iszero(sigdigits) ? Rob32(round(Float64(x), digits=digits, base=base)) : Rob32(round(Float64(x), sigdigits=sigdigits, base=base))
+    iszero(sigdigits) ? Robust32(round(Float64(x), digits=digits, base=base)) : Robust32(round(Float64(x), sigdigits=sigdigits, base=base))
 
 for T in (:BigInt, :Int128, :Int64, :Int32, :Int16, :Int8) 
   @eval Base.round(::Type{$T}, x::Robust32) = round($T, Float64(x))
@@ -393,13 +396,13 @@ for F in (:fma, :muladd)
 end
 
 function evalpoly(x::Robust32, p::NTuple{N, Robust32}) where {N}
-    Rob32(evalpoly(Float64(x), map(Float64, p)))
+    Robust32(evalpoly(Float64(x), map(Float64, p)))
 end
 function evalpoly(x::T, p::NTuple{N, Robust32}) where {T,N}
-    Rob32(evalpoly(Float64(x), map(Float64, p)))
+    Robust32(evalpoly(Float64(x), map(Float64, p)))
 end
 function evalpoly(x::Robust32, p::NTuple{N, T}) where {T,N}
-    Rob32(evalpoly(Float64(x), p))
+    Robust32(evalpoly(Float64(x), p))
 end
 
 #=     
@@ -433,6 +436,7 @@ end
     convert(Ptr{T}, pointer(m,1))
 
 include("minmax.jl")
+include("complex.jl")
 include("randnums.jl")
 include("linearalgebra.jl")
 include("specialfuncs.jl")
