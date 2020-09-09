@@ -11,6 +11,9 @@ const ComplexR32_2 = ComplexR32(Robust32_2, Robust32_0)
 zero(::Type{ComplexR32}) = ComplexR32_0
 one(::Type{ComplexR32})  = ComplexR32_1
 two(::Type{ComplexR32})  = ComplexR32_2
+zero(x::ComplexR32) = ComplexR32_0
+one(x::ComplexR32)  = ComplexR32_1
+two(x::ComplexR32)  = ComplexR32_2
 
 iszero(x::ComplexR32) = x === ComplexR32_0
 isone(x::ComplexR32)  = x === ComplexR32_1
