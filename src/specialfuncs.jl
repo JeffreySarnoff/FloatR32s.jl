@@ -52,7 +52,7 @@ for F in (:gamma_inc_inv,)
 end
 
 # functions of 3 arguments returning a value of NTuple{2,Float} type
-for F in (:gamma_inc)
+for F in (:gamma_inc,)
   @eval begin
     SF.$F(x::Robust32, y::Robust32, IND::Integer) = Robust32(SF.$F(Float64(x), Float64(y), IND))
     SF.$F(x::Robust32, y::AbstractFloat, IND::Integer) = Robust32(SF.$F(Float64(x), Float64(y), IND))
@@ -61,7 +61,7 @@ for F in (:gamma_inc)
 end
 
 # functions of 3 arguments returning a value of NTuple{2,Float} type
-for F in (:beta_inc)
+for F in (:beta_inc,)
   @eval begin
     SF.$F(x::Robust32, y::Robust32, z::Robust32) = Robust32(SF.$F(Float64(x), Float64(y), Float64(z)))
     SF.$F(x::Robust32, y::AbstractFloat, z::Robust32) = Robust32(SF.$F(Float64(x), Float64(y), Float64(z)))
