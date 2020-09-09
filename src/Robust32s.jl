@@ -21,7 +21,7 @@ A module for robust Float32 computation.
 
 module Robust32s
 
-export RobustFloat,
+export RobustFloat, FastFloats,
        Robust32, ComplexR32,
        robust32, complexr32,
        float64, float32
@@ -61,6 +61,9 @@ using LinearAlgebra
 
 abstract  type RobustFloat <: AbstractFloat  end
 primitive type Robust32    <: RobustFloat 64 end
+
+const FastFloats = Union{Float64, Float32, Robust32}
+const BinaryFloats = Union{filter(isconcretetype, tuple(subtypes(AbstractFloat)...))...}
 
 const ComplexR32 = Complex{Robust32}
 
