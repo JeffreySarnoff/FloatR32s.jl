@@ -27,10 +27,12 @@ for F in (:besseli, :besselix, :besselj, :besselj, :besseljx,
 end
 
 for F in (:besselj, :bessely)
-  @eval SF.$F(x::Integer, y::Robust32) = Robust32(SF.$F(Int32(x), Float64(y))) 
+  @eval begin
+    SF.$F(x::Int32, y::Robust32) = Robust32(SF.$F(x, Float64(y)))
+  end                  
 end
 
-for F in (:gamma_inc_inv)
+for F in (:gamma_inc_inv,)
   @eval begin
     SF.$F(x::Robust32, y::Robust32, z::Robust32) = Robust32(SF.$F(Float64(x), Float64(y), Float64(z)))
   end                             
